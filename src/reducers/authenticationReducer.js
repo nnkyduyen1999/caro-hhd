@@ -7,7 +7,7 @@ export const authenReducer = (prevState, action) => {
         ...prevState,
         isAuthenticated: true,
         token: action.data.token,
-        userId: action.data.userId,
+        userInfo: action.data.userInfo,
         errMsg: null
       };
     case LOGIN_FAILURE:
@@ -16,3 +16,4 @@ export const authenReducer = (prevState, action) => {
       return new Error();
   }
 };
+
