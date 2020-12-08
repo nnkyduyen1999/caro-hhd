@@ -5,8 +5,10 @@ import {login} from "../actions/authenticationAction";
 const initialState = {
     isAuthenticated: false,
     idUser: null,
-    token: null
+    token: null,
+    errMsg: null,
 }
+
 const AuthenticationContext = React.createContext();
 const AuthenticationProvider = (props) => {
     const [authenState, dispatch] = useReducer(authenReducer, initialState);

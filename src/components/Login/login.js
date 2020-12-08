@@ -9,6 +9,8 @@ import Grid from "@material-ui/core/Grid";
 import Hidden from "@material-ui/core/Hidden";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
+import Alert from '@material-ui/lab/Alert';
+import { useHistory } from "react-router-dom";
 
 export default function Login() {
   const authenticationContext = useContext(AuthenticationContext);
@@ -18,12 +20,13 @@ export default function Login() {
   const [errorMessage, setErrorMessage] = useState("");
 
   const classes = useStyles();
+  const history = useHistory();
   
   useEffect(() => {
     if (authenticationContext.authenState.isAuthenticated) {
-      console.log("OK");
+      history.push("/");
     }
-  }, [authenticationContext.authenState.isAuthenticated]);
+  }, [authenticationContext.authenState.isAuthenticated, history]);
 
   const handleChangeTextField = (e) => {
     switch (e.target.name) {
@@ -50,8 +53,16 @@ export default function Login() {
       setErrorMessage("Please fill in all required fields");
       return;
     }
-    authenticationContext.login("username", "password");
+    authenticationContext.login(username, password);
   };
+  console.log(authenticationContext.authenState);
+  const renderErrorMsg = (state) => {
+    if (!state.errMsg) {
+      return <></>
+    } else {
+    return <Alert severity="error">{state.errMsg}</Alert>
+    }
+  }
 
   return (
     <Grid container spacing={3} className={classes.root}>
@@ -65,6 +76,7 @@ export default function Login() {
             <Typography component="h1" variant="h5">
               Login
             </Typography>
+            {renderErrorMsg(authenticationContext.authenState)}
             <form
               onSubmit={(e) => handleFormSubmit(e)}
               className={classes.form}

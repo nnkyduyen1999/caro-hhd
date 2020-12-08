@@ -8,9 +8,10 @@ export const authenReducer = (prevState, action) => {
         isAuthenticated: true,
         token: action.data.token,
         userId: action.data.userId,
+        errMsg: null
       };
     case LOGIN_FAILURE:
-      return { ...prevState, isAuthenticated: false };
+      return { ...prevState, isAuthenticated: false, errMsg: action.data.errMsg };
     default:
       return new Error();
   }
