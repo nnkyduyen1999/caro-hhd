@@ -28,7 +28,7 @@ export default function Login() {
 
     useEffect(() => {
         if (authenticationContext.authenState.isAuthenticated) {
-            history.push("/");
+            history.push("/online-users");
         }
     }, [authenticationContext.authenState.isAuthenticated, history]);
 
