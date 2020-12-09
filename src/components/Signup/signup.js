@@ -12,6 +12,7 @@ import axios from "axios";
 import { useHistory } from "react-router-dom";
 
 const Signup = () => {
+  console.log(process.env);
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -58,6 +59,7 @@ const Signup = () => {
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
+
     if (
       email === "" ||
       username === "" ||
@@ -94,7 +96,6 @@ const Signup = () => {
           setErrorMessage(err.response.data.message);
         }
       );
-
   };
 
   return (
