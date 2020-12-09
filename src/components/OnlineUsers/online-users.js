@@ -4,7 +4,7 @@ import socket from '../../socket.io/socket.io'
 
 const  OnlineUsers = (props) => {
     const authenticationContext = useContext(AuthenticationContext)
-    
+    console.log(authenticationContext.authenState)
     socket.emit('new-connection', authenticationContext.authenState.userId)
 
     socket.on('new-user', (onlineUsers) => {

@@ -20,14 +20,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9f1b3a4b-36ba-4750-bfc7-0b4ec066c686" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/global/constant.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.eslintcache" beforeDir="false" afterPath="$PROJECT_DIR$/.eslintcache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/actions/authenticationAction.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/actions/authenticationAction.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Login/login.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Login/login.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/OnlineUsers/online-users.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/OnlineUsers/online-users.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/providers/authenticationProvider.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/providers/authenticationProvider.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reducers/authenticationReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/reducers/authenticationReducer.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,16 +89,17 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
     <state x="551" y="256" key="#ESLint" timestamp="1607498435621">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="551" y="256" key="#ESLint/0.0.1366.728@0.0.1366.728" timestamp="1607498435621" />
-    <state x="463" y="119" key="FileChooserDialogImpl" timestamp="1607442887379">
+    <state x="463" y="119" key="FileChooserDialogImpl" timestamp="1607517750355">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="463" y="119" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1607442887379" />
+    <state x="463" y="119" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1607517750355" />
     <state x="346" y="49" width="672" height="678" key="search.everywhere.popup" timestamp="1607502984073">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
