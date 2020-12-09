@@ -12,6 +12,8 @@ import Container from "@material-ui/core/Container";
 import Alert from '@material-ui/lab/Alert';
 import {useHistory} from "react-router-dom";
 import {GoogleLogin} from 'react-google-login';
+import FacebookLogin from 'react-facebook-login';
+import {GOOGLE_CLIENT_ID} from "../../global/constant";
 
 export default function Login() {
     // console.log("client id:", process.env.REACT_APP_GOOGLE_CLIENT_ID)
@@ -65,9 +67,25 @@ export default function Login() {
             return <Alert severity="error">{state.errMsg}</Alert>
         }
     }
-    const handleLoginGoogleSuccess = (response) => {
-        authenticationContext.loginGoogle(response.profileObj);
-    }
+
+    const responseGoogle = (response) => {
+        console.log("login gg success", response);
+        const {email, googleId, givenName,  familyName} = response.profileObj;
+        authenticationContext.loginGoogle(email, googleId, givenName, familyName);
+    };
+
+    const responseFacebook = (response) => {
+        const familyName = response.name.split(' ').pop();
+        const givenName = response.name.slice(0, response.name.length - familyName.length-1);
+        console.log(`--${givenName}--${familyName}--`);
+        console.log("login fb", response);
+        authenticationContext.loginFacebook(
+            response.email,
+            response.id,
+            givenName,
+            familyName
+        )
+    };
     return (
         <Grid container spacing={3} className={classes.root}>
             <Hidden smDown>
@@ -126,19 +144,21 @@ export default function Login() {
                             </div>
                             <div className={classes.btnSection}>
                                 <GoogleLogin
-                                    clientId="790846462701-596qrrs26khko555amanavr1dsi0v7fm.apps.googleusercontent.com"
+                                    clientId={GOOGLE_CLIENT_ID}
                                     buttonText="Login by google"
-                                    onSuccess={(response) => {
-                                        console.log("login gg succeess", response);
-                                        handleLoginGoogleSuccess(response);
-                                    }}
+                                    onSuccess={responseGoogle}
                                     onFailure={(response) => {
                                         console.log("login gg failed", response);
                                     }}
                                     cookiePolicy={"single_host_origin"}
                                 />
-
                             </div>
+                            <FacebookLogin
+                                appId="188674462909520"
+                                // autoLoad={true}
+                                fields="name,email,picture"
+                                callback={responseFacebook}
+                            />
 
                             <Grid container>
                                 <Grid item>

@@ -20,10 +20,13 @@ const login = (dispatch) => (username, password) => {
             dispatch({type: LOGIN_FAILURE, data: err.message});
         });
 };
-const loginGoogle = (dispatch) => (profile) => {
+const loginGoogle = (dispatch) => (email, googleId, givenName, familyName) => {
     axios
         .post(`${process.env.REACT_APP_API_ENDPOINT}/login-google`, {
-            profile
+            email,
+            googleId,
+            givenName,
+            familyName
         })
         .then((res) => {
             if (res.status === 200) {
@@ -36,6 +39,26 @@ const loginGoogle = (dispatch) => (profile) => {
             dispatch({type: LOGIN_FAILURE, data: err.message});
         });
 }
-export {login, loginGoogle};
+const loginFacebook = (dispatch) => (email, facebookId, givenName, familyName) => {
+    axios
+        .post(`${process.env.REACT_APP_API_ENDPOINT}/login-facebook`, {
+            email,
+            facebookId,
+            givenName,
+            familyName
+        })
+        .then((res) => {
+            if (res.status === 200) {
+                dispatch({type: LOGIN_SUCCESS, data: res.data});
+            } else {
+                dispatch({type: LOGIN_FAILURE, data: res.data});
+            }
+        })
+        .catch((err) => {
+            dispatch({type: LOGIN_FAILURE, data: err.message});
+        });
+}
+
+export {login, loginGoogle, loginFacebook};
 
 
