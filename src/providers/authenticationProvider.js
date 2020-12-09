@@ -4,7 +4,7 @@ import {login} from "../actions/authenticationAction";
 
 const initialState = {
     isAuthenticated: false,
-    idUser: null,
+    userId: null,
     token: null,
     errMsg: null,
 }
