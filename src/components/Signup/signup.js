@@ -58,8 +58,6 @@ const Signup = () => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-
-
     if (
       email === "" ||
       username === "" ||
