@@ -3,6 +3,7 @@ import React, { useContext, useState } from "react";
 import { AuthenticationContext } from "../../providers/authenticationProvider";
 import socket from "../../socket.io/socket.io";
 import { makeStyles } from "@material-ui/core/styles";
+import PlaySound from "../PlaySound/play-sound";
 
 const OnlineUsers = (props) => {
   const classes = useStyles();
@@ -30,6 +31,7 @@ const OnlineUsers = (props) => {
   return (
     <Container className={classes.root}>
       <div>Online Users</div>
+      <PlaySound />
       <List dense className={classes.list}>
         {renderOnlineUsers(onlineUsers)}
       </List>
