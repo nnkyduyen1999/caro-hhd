@@ -20,11 +20,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9f1b3a4b-36ba-4750-bfc7-0b4ec066c686" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.eslintcache" beforeDir="false" afterPath="$PROJECT_DIR$/.eslintcache" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/service/calculateWinner.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/OnlineUsers/online-users.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/OnlineUsers/online-users.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/providers/authenticationProvider.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/providers/authenticationProvider.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reducers/authenticationReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/reducers/authenticationReducer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/actions/authenticationAction.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/actions/authenticationAction.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,6 +60,11 @@
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\DELL-LAP\Downloads\Deadline\web\caro-hhd\src" />
+    </key>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -73,6 +76,7 @@
       <workItem from="1607442069954" duration="802000" />
       <workItem from="1607442890595" duration="8401000" />
       <workItem from="1607497866327" duration="7742000" />
+      <workItem from="1608053360319" duration="3459000" />
     </task>
     <servers />
   </component>
