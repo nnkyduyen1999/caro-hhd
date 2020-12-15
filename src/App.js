@@ -9,6 +9,8 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core";
 import PublicRoute from "./router/public-router";
 import PrivateRoute from "./router/private-router";
 import {AuthenticationProvider} from "./providers/authenticationProvider";
+import Home from "./components/Home/home";
+import Games from "./components/Games/games";
 
 function App() {
   const darkTheme = createMuiTheme({
@@ -27,6 +29,8 @@ function App() {
             <PublicRoute restricted={true} component={Login} path="/login" exact/>
             <PrivateRoute component={Signup} path="/signup" exact/>
             <PrivateRoute path="/online-users" component={OnlineUsers} />
+            <PrivateRoute path="/home" component={Home} />
+            <PrivateRoute path="/games" component={Games} />
           </Switch>
         </BrowserRouter>
       </AuthenticationProvider>
