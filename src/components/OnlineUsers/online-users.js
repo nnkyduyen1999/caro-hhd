@@ -1,9 +1,8 @@
-import { Container, List, ListItem, ListItemText } from "@material-ui/core";
+import { List, ListItem, ListItemText } from "@material-ui/core";
 import React, { useContext, useState } from "react";
 import { AuthenticationContext } from "../../providers/authenticationProvider";
 import socket from "../../socket.io/socket.io";
 import { makeStyles } from "@material-ui/core/styles";
-import PlaySound from "../PlaySound/play-sound";
 
 const OnlineUsers = (props) => {
   const classes = useStyles();
@@ -29,13 +28,12 @@ const OnlineUsers = (props) => {
   };
 
   return (
-    <Container className={classes.root}>
+    <div className={classes.root}>
       <div>Online Users</div>
-      <PlaySound />
       <List dense className={classes.list}>
         {renderOnlineUsers(onlineUsers)}
       </List>
-    </Container>
+    </div>
   );
 };
 
@@ -49,6 +47,6 @@ const useStyles = makeStyles((theme) => ({
   list: {
     width: "100%",
     // maxWidth: 360,
-    backgroundColor: theme.palette.background.paper,
+    // backgroundColor: theme.palette.background.paper,
   },
 }));

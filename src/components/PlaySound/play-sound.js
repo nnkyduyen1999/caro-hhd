@@ -12,11 +12,11 @@ const PlaySound = (props) => {
 
   useEffect(() => {
     audio.load();
-  }, []);
+  }, [audio]);
 
   useEffect(() => {
     playing ? audio.play() : audio.pause();
-  }, [playing]);
+  }, [audio, playing]);
 
   return (
     <div>
