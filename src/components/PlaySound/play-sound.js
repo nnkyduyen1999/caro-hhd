@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import VolumeUpIcon from "@material-ui/icons/VolumeUp";
 import VolumeOffIcon from "@material-ui/icons/VolumeOff";
-import { Button } from "@material-ui/core";
+import { IconButton } from "@material-ui/core";
 
 const PlaySound = (props) => {
   // const link = 'http://streaming.tdiradio.com:8000/house.mp3'
@@ -20,9 +20,9 @@ const PlaySound = (props) => {
 
   return (
     <div>
-      <Button color="primary" onClick={() => setPlaying(!playing)}>
+      <IconButton color="primary" onClick={() => setPlaying(!playing)}>
         {playing ? <VolumeOffIcon /> : <VolumeUpIcon />}
-      </Button>
+      </IconButton>
     </div>
   );
 };

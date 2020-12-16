@@ -3,8 +3,9 @@ import { BOARD_SIZE } from "../../global/constant";
 import Board from "../Board/board";
 import PlaySound from "../PlaySound/play-sound";
 import Chat from "../Chat/chat";
-import { Grid, Paper, Container, Box, Avatar, Button } from "@material-ui/core";
+import { Grid, Paper, Container, Box, Avatar, Button, IconButton } from "@material-ui/core";
 import { useStyles } from "../Home/useStyle";
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 const Game = (props) => {
   const classes = useStyles();
@@ -53,7 +54,9 @@ const Game = (props) => {
               <PlaySound />
             </Grid>
             <Grid item xs={12}>
-              <Paper>Thoat</Paper>
+              <IconButton color="secondary" aria-label="exit">
+                <ExitToAppIcon/>
+              </IconButton>
             </Grid>
           </Grid>
         </Grid>
