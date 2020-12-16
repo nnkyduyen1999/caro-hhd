@@ -48,8 +48,8 @@ const OnlineUsers = (props) => {
             />
           </StyledBadge>
         </ListItemAvatar>
-        {/* <ListItemText primary={user.username} /> */}
-        <ListItemText primary="Name" />
+        <ListItemText primary={user.username} />
+        {/* <ListItemText primary="Name" /> */}
       </ListItem>
     ));
   };
