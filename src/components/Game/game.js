@@ -68,10 +68,10 @@ const Game = (props) => {
             <Grid container className={classes.paper}>
               <Grid item xs={12}>
                 <Box display="flex" justifyContent="center">
-                <Board
-                  squares={current.squares}
-                  onClick={(i) => handleClick(i)}
-                />
+                  <Board
+                    squares={current.squares}
+                    onClick={(i) => handleClick(i)}
+                  />
                 </Box>
               </Grid>
             </Grid>
@@ -87,14 +87,22 @@ const Game = (props) => {
           <Grid item xs={5} spacing={3}>
             <Grid item xs={12}>
               <Grid container justify="space-around" className={classes.paper}>
-                <Grid item xs={3}>
-                  <Box textAlign="center">X</Box>
+                <Grid item xs={3} display="flex" justify="center">
+                  <img
+                    src={process.env.PUBLIC_URL + "/img/XIcon.svg"}
+                    alt="icon"
+                    className={classes.square}
+                  />
                 </Grid>
                 <Grid item xs={3}>
                   <Box textAlign="center">Goals</Box>
                 </Grid>
                 <Grid item xs={3}>
-                  <Box textAlign="center">O</Box>
+                  <img
+                    src={process.env.PUBLIC_URL + "/img/OIcon.svg"}
+                    alt="icon"
+                    className={classes.square}
+                  />
                 </Grid>
               </Grid>
               <Grid container justify="space-around" className={classes.paper}>
@@ -132,7 +140,7 @@ const Game = (props) => {
               </Grid>
               <Grid container justify="center">
                 <Grid item xs={8}>
-                  <Chat/>
+                  <Chat />
                 </Grid>
               </Grid>
             </Grid>
