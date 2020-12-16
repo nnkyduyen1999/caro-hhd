@@ -2,10 +2,11 @@ import axios from "axios";
 
 export const LOGIN_SUCCESS = `LOGIN_SUCCESS`;
 export const LOGIN_FAILURE = `LOGIN_FAILURE`;
+axios.defaults.baseURL = process.env.REACT_APP_API_ENDPOINT;
 
 const login = (dispatch) => (username, password) => {
     axios
-        .post(`${process.env.REACT_APP_API_ENDPOINT}/login`, {
+        .post(`/login`, {
             username: username,
             password: password,
         })
@@ -22,7 +23,7 @@ const login = (dispatch) => (username, password) => {
 };
 const loginGoogle = (dispatch) => (email, googleId, givenName, familyName) => {
     axios
-        .post(`${process.env.REACT_APP_API_ENDPOINT}/login-google`, {
+        .post(`/login-google`, {
             email,
             googleId,
             givenName,
@@ -41,7 +42,7 @@ const loginGoogle = (dispatch) => (email, googleId, givenName, familyName) => {
 }
 const loginFacebook = (dispatch) => (email, facebookId, givenName, familyName) => {
     axios
-        .post(`${process.env.REACT_APP_API_ENDPOINT}/login-facebook`, {
+        .post(`/login-facebook`, {
             email,
             facebookId,
             givenName,
