@@ -9,6 +9,7 @@ import Game from "./components/Game/game";
 import PublicRoute from "./router/public-router";
 import PrivateRoute from "./router/private-router";
 import {AuthenticationProvider} from "./providers/authenticationProvider";
+import Home from "./components/Home/home";
 import Chat from "./components/Chat/chat";
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
             <PublicRoute restricted={true} component={Login} path="/login" exact/>
             <PublicRoute component={Signup} path="/signup" exact/>
             <PrivateRoute path="/online-users" component={OnlineUsers} />
+            <PrivateRoute path="/home" component={Home} />
             <PrivateRoute path="/game" component={Game} />
             <PrivateRoute path="/chat" component={Chat} />
           </Switch>
