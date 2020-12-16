@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import useChat from "./useChat";
 import {Grid} from "@material-ui/core";
 import makeStyles from "@material-ui/core/styles/makeStyles";
@@ -18,6 +18,12 @@ const Chat = ({id}) => {
     const {messages, sendMessage} = useChat(roomId); // Creates a websocket and manages messaging
     const [newMessage, setNewMessage] = React.useState(""); // Message to be sent
 
+    useEffect(() => {
+        const element = document.getElementById("bottom");
+        // obj.scrollIntoView();
+        element.scrollTop = element.scrollHeight;
+        // console.log(obj);
+    }, [messages])
 
     const handleNewMessageChange = (event) => {
         setNewMessage(event.target.value);
@@ -28,9 +34,7 @@ const Chat = ({id}) => {
         if (newMessage !== '') {
             sendMessage(newMessage);
             setNewMessage("");
-            const obj = document.getElementById("hihi");
-            obj.scrollIntoView();
-            console.log(obj);
+
         }
     };
 
@@ -44,11 +48,10 @@ const Chat = ({id}) => {
         <Grid container className={classes.container}>
             <CssBaseline/>
             <Grid item md={12}>
-                <List className={classes.conversationContainer} id="list-messages">
+                <List className={classes.conversationContainer} id={'bottom'}>
                     {messages.map((message, i) => (
                         <ChatItem key={i} message={message.body} isOwn={message.ownedByCurrentUser} senderName={message.senderName}/>
                     ))}
-                    <ListItem id={'hihi'}/>
                 </List>
             </Grid>
             <Grid item md={12}>
@@ -93,7 +96,7 @@ const useStyles = makeStyles(theme => ({
         maxWidth: 360,
         // backgroundColor: theme.palette.background.paper,
         position: 'relative',
-        overflow: 'scroll',
+        overflowY: 'auto',
         maxHeight: 300,
     },
 
