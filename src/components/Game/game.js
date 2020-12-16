@@ -42,7 +42,7 @@ const Game = (props) => {
   return (
     <div>
       <PlaySound />
-      <Board squares={current.squares} onClick={(i) => handleClick(i)} />
+      <Board squares={current.squares} currSquare={current.location} onClick={(i) => handleClick(i)} />
     </div>
   );
 };
