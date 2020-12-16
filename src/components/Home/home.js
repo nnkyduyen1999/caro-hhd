@@ -71,7 +71,6 @@ const Home = () => {
               <img src="/img/caro.svg" className={classes.image} alt="Img" />
               </Hidden>
             </Grid>
-            {/* <Grid item sx={12} className={classes.image} /> */}
           </Grid>
         </Grid>
       </Grid>

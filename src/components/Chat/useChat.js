@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import socketIOClient from "socket.io-client";
+import {AuthenticationContext} from "../../providers/authenticationProvider";
 
 const NEW_CHAT_MESSAGE_EVENT = "newChatMessage"; // Name of the event
 const SOCKET_SERVER_URL = "http://localhost:3000";
@@ -7,6 +8,7 @@ const SOCKET_SERVER_URL = "http://localhost:3000";
 const useChat = (roomId) => {
     const [messages, setMessages] = useState([]); // Sent and received messages
     const socketRef = useRef();
+    const {authenState} = useContext(AuthenticationContext);
 
     useEffect(() => {
         // Creates a WebSocket connection
@@ -36,6 +38,7 @@ const useChat = (roomId) => {
         socketRef.current.emit(NEW_CHAT_MESSAGE_EVENT, {
             body: messageBody,
             senderId: socketRef.current.id,
+            senderName: authenState.userInfo.username
         });
     };
 
