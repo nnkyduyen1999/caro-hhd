@@ -3,7 +3,7 @@ import socketIOClient from "socket.io-client";
 import {AuthenticationContext} from "../../providers/authenticationProvider";
 
 const NEW_CHAT_MESSAGE_EVENT = "newChatMessage"; // Name of the event
-const SOCKET_SERVER_URL = "http://localhost:3000";
+const SOCKET_SERVER_URL = process.env.REACT_APP_API_ENDPOINT;
 
 const useChat = (roomId) => {
     const [messages, setMessages] = useState([]); // Sent and received messages
