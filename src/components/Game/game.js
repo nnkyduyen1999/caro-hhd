@@ -23,7 +23,7 @@ const Game = (props) => {
   const classes = useStyles();
   const auth = useContext(AuthenticationContext);
   const player =
-    props.location.state.userXId === auth.authenState.userInfo._id ? "X" : "O";
+    props.location.state.roomInfo.userXId === auth.authenState.userInfo._id ? "X" : "O";
   console.log(player);
   let { roomId } = useParams();
   const [history, setHistory] = useState([
@@ -31,13 +31,13 @@ const Game = (props) => {
   ]);
   const [stepNumber, setStepNumber] = useState(0);
   const [xIsNext, setXIsNext] = useState(true);
-  const [gameStt, setGameStt] = useState(``);
+  const [gameStt, setGameStt] = useState(`Bắt đầu X`);
   const [isClickable, setIsClickable] = useState(true);
   const [goal, setGoal] = useState({
     xPoints: 0,
     oPoints: 0,
   });
-
+  const [winningLine, setWinningLine] = useState([])
   const [latestLocation, setLatestLocation] = useState(null);
 
   useEffect(() => {
@@ -54,6 +54,7 @@ const Game = (props) => {
       if (winner) {
         setGameStt(`${winner} thắng`);
         setIsClickable(false);
+        setWinningLine(line)
         if (winner === `X`) {
           setGoal({
             ...goal,
@@ -152,6 +153,7 @@ const Game = (props) => {
                   squares={current.squares}
                   onClick={(i) => handleClick(i)}
                   currSquare={current.location}
+                  winningLine={winningLine}
                 />
               </Box>
             </Grid>
@@ -196,7 +198,7 @@ const Game = (props) => {
                   src="https://images-na.ssl-images-amazon.com/images/I/71FcdrSeKlL._AC_SL1001_.jpg"
                   className={classes.large}
                 />
-                <Box className={classes.userName}>X</Box>
+                <Box className={classes.userName}>{props.location.state.roomInfo.usernameX}</Box>
               </Box>
             </Grid>
             <Grid item xs={3}>
@@ -209,7 +211,7 @@ const Game = (props) => {
                   src="https://images-na.ssl-images-amazon.com/images/I/71FcdrSeKlL._AC_SL1001_.jpg"
                   className={classes.large}
                 />
-                <Box className={classes.userName}>O</Box>
+                <Box className={classes.userName}>{props.location.state.roomInfo.usernameO}</Box>
               </Box>
             </Grid>
           </Grid>

@@ -9,7 +9,7 @@ import React, { useContext, useEffect } from "react";
 import { AuthenticationContext } from "../../providers/authenticationProvider";
 import socket from "../../socket.io/socket.io";
 import { makeStyles } from "@material-ui/core/styles";
-import {StyledBadge} from "./styledBadge";
+import { StyledBadge } from "./styledBadge";
 
 const OnlineUsers = (props) => {
   const classes = useStyles();
@@ -26,12 +26,17 @@ const OnlineUsers = (props) => {
 
   const handleClickUser = (id) => {
     console.log(id);
-  }
+  };
 
   const renderOnlineUsers = (users) => {
     console.log("hi", users);
     return users.map((user) => (
-      <ListItem key={user._id} dense button onClick={() => handleClickUser(user._id)}>
+      <ListItem
+        key={user._id}
+        dense
+        button
+        onClick={() => handleClickUser(user._id)}
+      >
         <ListItemAvatar>
           <StyledBadge
             overlap="circle"
@@ -49,7 +54,6 @@ const OnlineUsers = (props) => {
           </StyledBadge>
         </ListItemAvatar>
         <ListItemText primary={user.username} />
-        {/* <ListItemText primary="Name" /> */}
       </ListItem>
     ));
   };
@@ -57,8 +61,7 @@ const OnlineUsers = (props) => {
   return (
     <div className={classes.root}>
       <List dense className={classes.list}>
-      {/* {renderOnlineUsers(props.onlineUsers)} */}
-        {renderOnlineUsers([0,1,2])}
+        {renderOnlineUsers(props.onlineUsers)}
       </List>
     </div>
   );

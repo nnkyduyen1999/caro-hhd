@@ -16,5 +16,8 @@ export const useStyles = makeStyles((theme) => ({
   currSquare: {
     border: '1px solid yellow',
   },
+  winningSquare: {
+    backgroundColor: 'yellow'
+  }
   
 }));
