@@ -8,6 +8,7 @@ const Board = (props) => {
   const renderSquare = (i) => {
     return (
       <Square
+        isCurrent={props.currSquare === i}
         key={`square-${i}`}
         value={props.squares[i]}
         onClick={() => props.onClick(i)}

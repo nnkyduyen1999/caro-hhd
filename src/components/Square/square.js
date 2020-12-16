@@ -4,15 +4,15 @@ import { useStyles } from "./useStyles";
 const Square = (props) => {
   const classes = useStyles()
   const XIcon = (
-    <img src={process.env.PUBLIC_URL + "/img/XIcon.svg"} alt="icon" />
+    <img src={process.env.PUBLIC_URL + "/img/XIcon.svg"} alt="X" />
   );
   const OIcon = (
-    <img src={process.env.PUBLIC_URL + "/img/OIcon.svg"} alt="icon" />
+    <img src={process.env.PUBLIC_URL + "/img/OIcon.svg"} alt="O" />
   );
   const icon = props.value === "X" ? XIcon : props.value === "O" ? OIcon : null;
-  
+  const buttonStyle = props.isCurrent ? `${classes.square} ${classes.currSquare}` : classes.square
   return (
-    <button className={classes.square} onClick={props.onClick}>
+    <button className={buttonStyle} onClick={props.onClick}>
       {icon}
     </button>
   );

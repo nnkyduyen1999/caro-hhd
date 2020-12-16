@@ -8,6 +8,10 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Paper from "@material-ui/core/Paper";
 import IconButton from "@material-ui/core/IconButton";
 import InputBase from "@material-ui/core/InputBase";
+import List from "@material-ui/core/List";
+import ListSubheader from "@material-ui/core/ListSubheader";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
 
 const Chat = ({id}) => {
     const classes = useStyles();
@@ -18,33 +22,40 @@ const Chat = ({id}) => {
 
     const handleNewMessageChange = (event) => {
         setNewMessage(event.target.value);
+
     };
 
     const handleSendMessage = () => {
-        if(newMessage !== '') {
+        if (newMessage !== '') {
             sendMessage(newMessage);
             setNewMessage("");
+        }
+    };
+
+    const handleKeyDown = (event) => {
+        if(event.key === 'Enter') {
+            handleSendMessage();
         }
     };
 
     return (
         <Grid container className={classes.container}>
             <CssBaseline/>
-            <Grid item className={classes.conversationContainer}>
-                <h1>Room: {roomId}</h1>
-                <div>
+            <Grid item md={12}>
+                <List className={classes.conversationContainer}>
                     {messages.map((message, i) => (
-                        <ChatItem key={i} message={message.body} isOwn={message.ownedByCurrentUser}/>
+                        <ChatItem key={i} message={message.body} isOwn={message.ownedByCurrentUser} senderName={message.senderName}/>
                     ))}
-                </div>
+                </List>
             </Grid>
-            <Grid item>
+            <Grid item md={12}>
                 <Paper className={classes.inputContainer}>
                     <InputBase
                         className={classes.input}
                         placeholder="type a message..."
                         onChange={handleNewMessageChange}
                         value={newMessage}
+                        onKeyDown={handleKeyDown}
                     />
                     <IconButton className={classes.iconButton} onClick={handleSendMessage}>
                         <SendIcon/>
@@ -58,10 +69,7 @@ const Chat = ({id}) => {
 const useStyles = makeStyles(theme => ({
     container: {
         flex: 1,
-        flexDirection: 'column',
-        width: 300,
-        marginLeft: 100,
-        border: "0.5px solid black",
+        border: "0.5px solid",
     },
     inputContainer: {
         padding: '2px 4px',
@@ -77,8 +85,15 @@ const useStyles = makeStyles(theme => ({
         padding: 10,
     },
     conversationContainer: {
-        height: 300
-    }
+        height: 300,
+        width: '100%',
+        maxWidth: 360,
+        // backgroundColor: theme.palette.background.paper,
+        position: 'relative',
+        overflowY: 'auto',
+        maxHeight: 300,
+    },
+
 }));
 
 export default Chat;

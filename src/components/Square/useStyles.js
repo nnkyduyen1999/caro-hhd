@@ -7,6 +7,14 @@ export const useStyles = makeStyles((theme) => ({
     border: 'none',
     margin: '5px',
     borderRadius: '3px',
-    backgroundColor: theme.palette.background.paper
-  }
+    backgroundColor: theme.palette.background.paper,
+
+    '&:focus': {
+      outline: 'none'
+    }
+  },
+  currSquare: {
+    border: '1px solid yellow',
+  },
+  
 }));
