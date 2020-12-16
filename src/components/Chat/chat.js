@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import useChat from "./useChat";
 import {Grid} from "@material-ui/core";
 import makeStyles from "@material-ui/core/styles/makeStyles";
@@ -9,16 +9,21 @@ import Paper from "@material-ui/core/Paper";
 import IconButton from "@material-ui/core/IconButton";
 import InputBase from "@material-ui/core/InputBase";
 import List from "@material-ui/core/List";
-import ListSubheader from "@material-ui/core/ListSubheader";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
 
 const Chat = ({id}) => {
     const classes = useStyles();
     // const { roomId } = props.match.params; // Gets roomId from URL
     const roomId = id || "5fd86ef67a1a712658cb5fac";
+    // const location = useLocation();
     const {messages, sendMessage} = useChat(roomId); // Creates a websocket and manages messaging
     const [newMessage, setNewMessage] = React.useState(""); // Message to be sent
+
+    useEffect(() => {
+        const element = document.getElementById("bottom");
+        // obj.scrollIntoView();
+        element.scrollTop = element.scrollHeight;
+        // console.log(obj);
+    }, [messages])
 
     const handleNewMessageChange = (event) => {
         setNewMessage(event.target.value);
@@ -29,6 +34,7 @@ const Chat = ({id}) => {
         if (newMessage !== '') {
             sendMessage(newMessage);
             setNewMessage("");
+
         }
     };
 
@@ -42,7 +48,7 @@ const Chat = ({id}) => {
         <Grid container className={classes.container}>
             <CssBaseline/>
             <Grid item md={12}>
-                <List className={classes.conversationContainer}>
+                <List className={classes.conversationContainer} id={'bottom'}>
                     {messages.map((message, i) => (
                         <ChatItem key={i} message={message.body} isOwn={message.ownedByCurrentUser} senderName={message.senderName}/>
                     ))}
@@ -52,7 +58,7 @@ const Chat = ({id}) => {
                 <Paper className={classes.inputContainer}>
                     <InputBase
                         className={classes.input}
-                        placeholder="type a message..."
+                        placeholder="nhập..."
                         onChange={handleNewMessageChange}
                         value={newMessage}
                         onKeyDown={handleKeyDown}

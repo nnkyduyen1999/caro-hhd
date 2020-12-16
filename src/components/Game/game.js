@@ -14,11 +14,12 @@ import {
 } from "@material-ui/core";
 import { useStyles } from "../Home/useStyle";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import {calculateWinner} from "../../service/calculateWinner";
+import { calculateWinner } from "../../service/calculateWinner";
+import { useParams } from "react-router-dom";
 
 const Game = (props) => {
   const classes = useStyles();
-
+  let { roomId } = useParams();
   const [history, setHistory] = useState([
     { squares: Array(BOARD_SIZE * BOARD_SIZE).fill(null), location: null },
   ]);
@@ -28,7 +29,7 @@ const Game = (props) => {
   const [isClickable, setIsClickable] = useState(true);
   const [goal, setGoal] = useState({
     xPoints: 0,
-    oPoints: 0
+    oPoints: 0,
   });
 
   const handleClick = (i) => {
@@ -44,24 +45,34 @@ const Game = (props) => {
       return;
     }
 
-    squares[i] = xIsNext ? "X" : "O";
+    setHistory(
+      historyArr.concat([
+        {
+          squares: squares,
+          location: i,
+        },
+      ])
+    );
+    setStepNumber(historyArr.length);
+    setXIsNext(!xIsNext);
+    console.log(historyArr);
 
     const checkedResult = calculateWinner(squares, i);
     console.log(checkedResult);
-    const {winner, line, draw} = checkedResult;
+    const { winner, line, draw } = checkedResult;
     if (winner) {
       setGameStt(`${winner} thắng`);
       setIsClickable(false);
       if (winner === `X`) {
         setGoal({
           ...goal,
-          xPoints: goal.xPoints + 1
-        })
+          xPoints: goal.xPoints + 1,
+        });
       } else {
         setGoal({
           ...goal,
-          oPoints: goal.oPoints + 1
-        })
+          oPoints: goal.oPoints + 1,
+        });
       }
     } else {
       if (draw) {
@@ -141,7 +152,9 @@ const Game = (props) => {
                 />
               </Grid>
               <Grid item xs={3}>
-                <Box textAlign="center">{goal.xPoints} : {goal.oPoints}</Box>
+                <Box textAlign="center">
+                  {goal.xPoints} : {goal.oPoints}
+                </Box>
               </Grid>
               <Grid item xs={3}>
                 <img
@@ -179,7 +192,7 @@ const Game = (props) => {
           </Grid>
           <Grid container justify="center">
             <Grid item xs={8}>
-              <Chat />
+              <Chat id={roomId} />
             </Grid>
           </Grid>
         </Grid>
@@ -187,5 +200,4 @@ const Game = (props) => {
     </Container>
   );
 };
-
 export default Game;
