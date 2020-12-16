@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { BOARD_SIZE } from "../../global/constant";
 import Board from "../Board/board";
 import PlaySound from "../PlaySound/play-sound";
@@ -16,9 +16,15 @@ import { useStyles } from "../Home/useStyle";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { calculateWinner } from "../../service/calculateWinner";
 import { useParams } from "react-router-dom";
+import socket from "../../socket.io/socket.io";
+import { AuthenticationContext } from "../../providers/authenticationProvider";
 
 const Game = (props) => {
   const classes = useStyles();
+  const auth = useContext(AuthenticationContext);
+  const player =
+    props.location.state.userXId === auth.authenState.userInfo._id ? "X" : "O";
+  console.log(player);
   let { roomId } = useParams();
   const [history, setHistory] = useState([
     { squares: Array(BOARD_SIZE * BOARD_SIZE).fill(null), location: null },
@@ -32,68 +38,86 @@ const Game = (props) => {
     oPoints: 0,
   });
 
+  const [latestLocation, setLatestLocation] = useState(null);
+
+  useEffect(() => {
+    if (latestLocation) {
+      const historyArr = history.slice(0, stepNumber + 1);
+      const current = historyArr[historyArr.length - 1];
+      const squares = current.squares.slice();
+
+      squares[latestLocation] = xIsNext ? "X" : "O";
+
+      const checkedResult = calculateWinner(squares, latestLocation);
+      console.log(checkedResult);
+      const { winner, line, draw } = checkedResult;
+      if (winner) {
+        setGameStt(`${winner} thắng`);
+        setIsClickable(false);
+        if (winner === `X`) {
+          setGoal({
+            ...goal,
+            xPoints: goal.xPoints + 1,
+          });
+        } else {
+          setGoal({
+            ...goal,
+            oPoints: goal.oPoints + 1,
+          });
+        }
+      } else {
+        if (draw) {
+          setGameStt(`Hoà`);
+          setIsClickable(false);
+        } else {
+          setGameStt(`Lượt kế tiếp ${xIsNext ? "O" : "X"}`);
+        }
+      }
+  
+  
+      setHistory(
+        historyArr.concat([
+          {
+            squares: squares,
+            location: latestLocation,
+          },
+        ])
+      );
+      setStepNumber(historyArr.length);
+      setXIsNext(!xIsNext);
+    }
+  }, [latestLocation]);
+
+  socket.on("acceptedMove", (data) => {
+    setLatestLocation(data.location)
+  });
+
+
   const handleClick = (i) => {
     if (!isClickable) {
       setGameStt("Đã có người thắng cuộc, vui lòng chọn ván chơi mới");
       return;
     }
+
     const historyArr = history.slice(0, stepNumber + 1);
     const current = historyArr[historyArr.length - 1];
     const squares = current.squares.slice();
 
-    if (squares[i]) {
+    if (
+      squares[i] |
+      (xIsNext & (player === "O")) |
+      (!xIsNext & (player === "X"))
+    ) {
       return;
     }
-
-    setHistory(
-      historyArr.concat([
-        {
-          squares: squares,
-          location: i,
-        },
-      ])
-    );
-    setStepNumber(historyArr.length);
-    setXIsNext(!xIsNext);
-    console.log(historyArr);
-
-    const checkedResult = calculateWinner(squares, i);
-    console.log(checkedResult);
-    const { winner, line, draw } = checkedResult;
-    if (winner) {
-      setGameStt(`${winner} thắng`);
-      setIsClickable(false);
-      if (winner === `X`) {
-        setGoal({
-          ...goal,
-          xPoints: goal.xPoints + 1,
-        });
-      } else {
-        setGoal({
-          ...goal,
-          oPoints: goal.oPoints + 1,
-        });
-      }
-    } else {
-      if (draw) {
-        setGameStt(`Hoà`);
-        setIsClickable(false);
-      } else {
-        setGameStt(`Lượt kế tiếp ${xIsNext ? "O" : "X"}`);
-      }
-    }
-
-    setHistory(
-      historyArr.concat([
-        {
-          squares: squares,
-          location: i,
-        },
-      ])
-    );
-    setStepNumber(historyArr.length);
-    setXIsNext(!xIsNext);
-    console.log(historyArr);
+    console.log("socket req");
+    socket.emit("requestMove", {
+      roomId: roomId,
+      // userId: auth.authenState.userInfo._id,
+      xIsNext: xIsNext,
+      location: i,
+      player: player,
+    });
   };
 
   //setup board game
@@ -140,7 +164,6 @@ const Game = (props) => {
             </Grid>
           </Grid>
         </Grid>
-
         <Grid item xs={5} spacing={3}>
           <Grid item xs={12}>
             <Grid container justify="space-around" className={classes.paper}>
