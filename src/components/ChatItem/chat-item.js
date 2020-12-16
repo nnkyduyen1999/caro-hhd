@@ -21,7 +21,7 @@ const ChatItem = ({message, username, isOwn, senderName}) => {
                                 color={"textPrimary"}
                                 style={{color: '#f8df4f'}}
                             >
-                                {`${senderName || 'haohao'}: ${message}`}
+                                {`${senderName}: ${message}`}
                             </Typography>
                         :
                         <Typography
@@ -30,7 +30,7 @@ const ChatItem = ({message, username, isOwn, senderName}) => {
                             className={classes.inline}
                             color={"textPrimary"}
                         >
-                            {`${username || 'haohao'}: ${message}`}
+                            {`${senderName}: ${message}`}
                         </Typography>
                 }
             />
