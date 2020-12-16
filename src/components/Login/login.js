@@ -1,8 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
-import { AuthenticationContext } from "../../providers/authenticationProvider";
-import { useStyles } from "../Signup/useStyles";
+import React, {useContext, useEffect, useState} from "react";
+import {AuthenticationContext} from "../../providers/authenticationProvider";
+import {useStyles} from "../Signup/useStyles";
 import Button from "@material-ui/core/Button";
-import FacebookIcon from '@material-ui/icons/Facebook';
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import Link from "@material-ui/core/Link";
@@ -11,10 +10,10 @@ import Hidden from "@material-ui/core/Hidden";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Alert from "@material-ui/lab/Alert";
-import { useHistory } from "react-router-dom";
-import { GoogleLogin } from "react-google-login";
+import {useHistory} from "react-router-dom";
+import {GoogleLogin} from "react-google-login";
 import FacebookLogin from "react-facebook-login";
-import { GOOGLE_CLIENT_ID } from "../../global/constant";
+import {GOOGLE_CLIENT_ID} from "../../global/constant";
 
 export default function Login() {
   // console.log("client id:", process.env.REACT_APP_GOOGLE_CLIENT_ID)
@@ -29,7 +28,7 @@ export default function Login() {
 
   useEffect(() => {
     if (authenticationContext.authenState.isAuthenticated) {
-      history.push("/");
+      history.push("/online-users");
     }
   }, [authenticationContext.authenState.isAuthenticated, history]);
 
