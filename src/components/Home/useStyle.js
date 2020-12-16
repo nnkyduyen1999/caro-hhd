@@ -22,6 +22,13 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     height: "100%",
   },
+  square: {
+    width: '30px',
+    height: '30px',
+    border: 'none',
+    margin: '5px',
+    borderRadius: '3px',
+  }
 }));
 
 export { useStyles };

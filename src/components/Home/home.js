@@ -6,7 +6,6 @@ import {
   Button,
   Hidden,
   Container,
-  Box,
 } from "@material-ui/core";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import AccessAlarmsIcon from "@material-ui/icons/AccessAlarms";
@@ -79,7 +78,6 @@ const Home = () => {
               <img src="/img/caro.svg" className={classes.image} alt="Img" />
               </Hidden>
             </Grid>
-            {/* <Grid item sx={12} className={classes.image} /> */}
           </Grid>
         </Grid>
       </Grid>

@@ -84,17 +84,26 @@ const Game = (props) => {
           </Grid>
         </Grid>
 
-        <Grid item xs={5} spacing={3}>
-          <Grid item xs={12}>
-            <Grid container justify="space-around" className={classes.paper}>
-              <Grid item xs={3}>
-                <Box textAlign="center">X</Box>
-              </Grid>
-              <Grid item xs={3}>
-                <Box textAlign="center">Goals</Box>
-              </Grid>
-              <Grid item xs={3}>
-                <Box textAlign="center">O</Box>
+          <Grid item xs={5} spacing={3}>
+            <Grid item xs={12}>
+              <Grid container justify="space-around" className={classes.paper}>
+                <Grid item xs={3} display="flex" justify="center">
+                  <img
+                    src={process.env.PUBLIC_URL + "/img/XIcon.svg"}
+                    alt="icon"
+                    className={classes.square}
+                  />
+                </Grid>
+                <Grid item xs={3}>
+                  <Box textAlign="center">Goals</Box>
+                </Grid>
+                <Grid item xs={3}>
+                  <img
+                    src={process.env.PUBLIC_URL + "/img/OIcon.svg"}
+                    alt="icon"
+                    className={classes.square}
+                  />
+                </Grid>
               </Grid>
             </Grid>
             <Grid container justify="space-around" className={classes.paper}>
@@ -129,7 +138,6 @@ const Game = (props) => {
             </Grid>
           </Grid>
         </Grid>
-      </Grid>
     </Container>
   );
 };
