@@ -9,12 +9,12 @@ import Paper from "@material-ui/core/Paper";
 import IconButton from "@material-ui/core/IconButton";
 import InputBase from "@material-ui/core/InputBase";
 import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
 
 const Chat = ({id}) => {
     const classes = useStyles();
     // const { roomId } = props.match.params; // Gets roomId from URL
     const roomId = id || "5fd86ef67a1a712658cb5fac";
+    // const location = useLocation();
     const {messages, sendMessage} = useChat(roomId); // Creates a websocket and manages messaging
     const [newMessage, setNewMessage] = React.useState(""); // Message to be sent
 
@@ -58,7 +58,7 @@ const Chat = ({id}) => {
                 <Paper className={classes.inputContainer}>
                     <InputBase
                         className={classes.input}
-                        placeholder="type a message..."
+                        placeholder="nhập..."
                         onChange={handleNewMessageChange}
                         value={newMessage}
                         onKeyDown={handleKeyDown}

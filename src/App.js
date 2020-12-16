@@ -31,7 +31,7 @@ function App() {
             <PublicRoute component={Signup} path="/signup" exact/>
             <PrivateRoute path="/online-users" component={OnlineUsers} />
             <PrivateRoute path="/home" component={Home} />
-            <PrivateRoute path="/game" component={Game} />
+            <PrivateRoute path="/game/:roomId" component={Game} />
             <PrivateRoute path="/chat" component={Chat} />
           </Switch>
         </BrowserRouter>
