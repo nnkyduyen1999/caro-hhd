@@ -1,40 +1,58 @@
 import React, {useContext} from 'react';
-import {Grid, Typography} from "@material-ui/core";
+import {Typography} from "@material-ui/core";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {AuthenticationContext} from "../../providers/authenticationProvider";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
 
 
-const ChatItem = ({message, isOwn}) => {
+const ChatItem = ({message, username, isOwn, senderName}) => {
     const classes = useStyles();
-    const {authenState} = useContext(AuthenticationContext);
 
     return (
-        isOwn ?
-            <Grid container className={classes.myMessage}>
-                <Typography>
-                    {message}
-                </Typography>
-            </Grid>
-            :
-            <Grid container className={classes.receivedMessage}>
-                <Typography>
-                    {message}
-                </Typography>
-            </Grid>
+        <ListItem alignItems="flex-start" dense={true} style={{paddingTop: 0, paddingBottom: 0}}>
+            <ListItemText
+                secondary={
+                    isOwn ?
+                            <Typography
+                                component="span"
+                                variant="body2"
+                                className={classes.inline}
+                                color={"textPrimary"}
+                                style={{color: '#f8df4f'}}
+                            >
+                                {`${senderName || 'haohao'}: ${message}`}
+                            </Typography>
+                        :
+                        <Typography
+                            component="span"
+                            variant="body2"
+                            className={classes.inline}
+                            color={"textPrimary"}
+                        >
+                            {`${username || 'haohao'}: ${message}`}
+                        </Typography>
+                }
+            />
+        </ListItem>
+        // <Grid container className={classes.container}>
+        //     <Typography noWrap={false} className={classes.message}>
+        //         {message}
+        //     </Typography>
+        // </Grid>
     );
 };
 
 const useStyles = makeStyles(theme => ({
-    myMessage: {
-        flex: 1,
-        margin: theme.spacing(1),
-        justifyContent: 'flex-end',
+    container: {
+        // margin: theme.spacing(1),
     },
-    receivedMessage: {
-        flex: 1,
+    message: {},
+    inline: {
+        display: 'inline',
     },
-    message: {
-        margin: theme.spacing(1),
+    isOwn: {
+        color: '#f8df4f'
     }
 }));
 
