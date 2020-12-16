@@ -5,7 +5,7 @@ import {
   ListItemAvatar,
   Avatar,
 } from "@material-ui/core";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { AuthenticationContext } from "../../providers/authenticationProvider";
 import socket from "../../socket.io/socket.io";
 import { makeStyles } from "@material-ui/core/styles";
@@ -13,24 +13,23 @@ import {StyledBadge} from "./styledBadge";
 
 const OnlineUsers = (props) => {
   const classes = useStyles();
-  const [onlineUsers, setOnlineUsers] = useState([]);
   const authenticationContext = useContext(AuthenticationContext);
 
   socket.on("update-online-users", (users) => {
-    console.log(users);
-    setOnlineUsers([...users]);
+    console.log("update", users);
+    props.setOnlineUsers([...users]);
   });
 
-  if (authenticationContext.authenState.userInfo) {
+  useEffect(() => {
     socket.emit("new-connection", authenticationContext.authenState.userInfo);
-  }
+  }, [authenticationContext.authenState.userInfo]);
 
   const handleClickUser = (id) => {
     console.log(id);
   }
 
   const renderOnlineUsers = (users) => {
-    console.log("hi", onlineUsers);
+    console.log("hi", users);
     return users.map((user) => (
       <ListItem key={user._id} dense button onClick={() => handleClickUser(user._id)}>
         <ListItemAvatar>
@@ -58,7 +57,7 @@ const OnlineUsers = (props) => {
   return (
     <div className={classes.root}>
       <List dense className={classes.list}>
-        {renderOnlineUsers([0, 1, 2])}
+        {renderOnlineUsers(props.onlineUsers)}
       </List>
     </div>
   );
@@ -73,7 +72,5 @@ const useStyles = makeStyles((theme) => ({
   },
   list: {
     width: "100%",
-    // maxWidth: 360,
-    // backgroundColor: theme.palette.background.paper,
   },
 }));

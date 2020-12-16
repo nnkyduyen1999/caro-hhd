@@ -3,22 +3,22 @@ import {
   Paper,
   Tabs,
   Tab,
-  Button,
   Hidden,
   Container,
 } from "@material-ui/core";
-import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import AccessAlarmsIcon from "@material-ui/icons/AccessAlarms";
 import GroupIcon from "@material-ui/icons/Group";
-import React, { useState } from "react";
+import React from "react";
 import { useStyles } from "./useStyle";
 import TabPanel from "./tabpanel";
 import OnlineUsers from "../OnlineUsers/online-users";
 import FinishedBoards from "../FinishedBoards/finishedBoards";
+import Matching from "../Matching/matching";
 
 const Home = () => {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
+  const [onlineUsers, setOnlineUsers] = React.useState([])
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -53,7 +53,7 @@ const Home = () => {
             </Tabs>
           </Paper>
           <TabPanel value={value} index={0}>
-            <OnlineUsers />
+            <OnlineUsers onlineUsers={onlineUsers} setOnlineUsers={setOnlineUsers}/>
           </TabPanel>
           <TabPanel value={value} index={1}>
             <FinishedBoards />
@@ -62,14 +62,7 @@ const Home = () => {
         <Grid item xs={6} spacing={3}>
           <Grid container>
             <Grid item xs={4}>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                endIcon={<SportsEsportsIcon />}
-              >
-                Chơi ngay
-              </Button>
+              <Matching />
             </Grid>
           </Grid>
           <Grid container>
