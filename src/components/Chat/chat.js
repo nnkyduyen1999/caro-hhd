@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import useChat from "./useChat";
 import {Grid} from "@material-ui/core";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import ChatItem from "../ChatItem/chat-item";
+import ChatItem from "./ChatItem/chat-item";
 import SendIcon from '@material-ui/icons/Send';
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Paper from "@material-ui/core/Paper";

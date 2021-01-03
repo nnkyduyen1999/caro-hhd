@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import {Typography} from "@material-ui/core";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import {AuthenticationContext} from "../../providers/authenticationProvider";
+import {AuthenticationContext} from "../../../providers/authenticationProvider";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 
