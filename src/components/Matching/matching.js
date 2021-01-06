@@ -28,6 +28,7 @@ const Matching = (props) => {
       color="primary"
       endIcon={<SportsEsportsIcon />}
       onClick={handleClick}
+      style={{marginTop: 20}}
     >
       Chơi ngay
     </Button>

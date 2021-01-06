@@ -28,7 +28,11 @@ const useStyles = makeStyles((theme) => ({
     border: 'none',
     margin: '5px',
     borderRadius: '3px',
-  }
+  },
+  input: {
+    marginLeft: theme.spacing(1),
+    flex: 1,
+  },
 }));
 
 export { useStyles };
