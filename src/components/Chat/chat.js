@@ -12,17 +12,12 @@ import List from "@material-ui/core/List";
 
 const Chat = ({id}) => {
     const classes = useStyles();
-    // const { roomId } = props.match.params; // Gets roomId from URL
-    const roomId = id || "5fd86ef67a1a712658cb5fac";
-    // const location = useLocation();
-    const {messages, sendMessage} = useChat(roomId); // Creates a websocket and manages messaging
+    const {messages, sendMessage} = useChat(id); // Creates a websocket and manages messaging
     const [newMessage, setNewMessage] = React.useState(""); // Message to be sent
 
     useEffect(() => {
         const element = document.getElementById("bottom");
-        // obj.scrollIntoView();
         element.scrollTop = element.scrollHeight;
-        // console.log(obj);
     }, [messages])
 
     const handleNewMessageChange = (event) => {
@@ -34,7 +29,6 @@ const Chat = ({id}) => {
         if (newMessage !== '') {
             sendMessage(newMessage);
             setNewMessage("");
-
         }
     };
 
