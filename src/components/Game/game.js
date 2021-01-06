@@ -130,9 +130,10 @@ const Game = (props) => {
     };
 
     const handleGiveIn = () => {
-        // if ((xIsNext & (player === "O")) | (!xIsNext & (player === "X"))) {
-        //     return;
-        // }
+        if (!isClickable || (xIsNext & (player === "O")) || (!xIsNext & (player === "X"))) {
+            return;
+        }
+
         socket.emit(GIVE_IN_EVENT, {
             winner: player === 'X' ? 'O' : 'X',
             roomId
