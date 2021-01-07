@@ -86,7 +86,7 @@ export default function Login() {
     );
   };
   return (
-    <Grid container spacing={3} className={classes.root}>
+    <Grid container className={classes.root}>
       <Hidden smDown>
         <Grid item md={7} className={classes.image} />
       </Hidden>
