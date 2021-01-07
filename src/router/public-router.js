@@ -8,7 +8,7 @@ const PublicRoute = ({component: Component, restricted, ...rest}) => {
     return (
         <Route {...rest} render={props => (
             authenState.isAuthenticated && restricted ?
-                <Redirect to="/online-users" />
+                <Redirect to="/home" />
                 : <Component {...props} />
         )} />
     );

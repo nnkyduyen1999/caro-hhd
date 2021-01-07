@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import useChat from "./useChat";
 import {Grid} from "@material-ui/core";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import ChatItem from "../ChatItem/chat-item";
+import ChatItem from "./ChatItem/chat-item";
 import SendIcon from '@material-ui/icons/Send';
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Paper from "@material-ui/core/Paper";
@@ -12,17 +12,12 @@ import List from "@material-ui/core/List";
 
 const Chat = ({id}) => {
     const classes = useStyles();
-    // const { roomId } = props.match.params; // Gets roomId from URL
-    const roomId = id || "5fd86ef67a1a712658cb5fac";
-    // const location = useLocation();
-    const {messages, sendMessage} = useChat(roomId); // Creates a websocket and manages messaging
+    const {messages, sendMessage} = useChat(id); // Creates a websocket and manages messaging
     const [newMessage, setNewMessage] = React.useState(""); // Message to be sent
 
     useEffect(() => {
         const element = document.getElementById("bottom");
-        // obj.scrollIntoView();
         element.scrollTop = element.scrollHeight;
-        // console.log(obj);
     }, [messages])
 
     const handleNewMessageChange = (event) => {
@@ -34,7 +29,6 @@ const Chat = ({id}) => {
         if (newMessage !== '') {
             sendMessage(newMessage);
             setNewMessage("");
-
         }
     };
 

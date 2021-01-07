@@ -20,9 +20,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9f1b3a4b-36ba-4750-bfc7-0b4ec066c686" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/service/calculateWinner.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/JoinRoom/join-room.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/actions/authenticationAction.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/actions/authenticationAction.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Home/home.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Home/home.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Home/useStyle.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Home/useStyle.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Matching/matching.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Matching/matching.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,7 +49,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../cos-decoder" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.standard" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
@@ -100,14 +102,14 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="551" y="256" key="#ESLint/0.0.1366.728@0.0.1366.728" timestamp="1607498435621" />
-    <state x="463" y="119" key="FileChooserDialogImpl" timestamp="1607517750355">
+    <state x="463" y="119" key="FileChooserDialogImpl" timestamp="1609697537670">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="463" y="119" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1607517750355" />
-    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup" timestamp="1607502984073">
+    <state x="463" y="119" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1609697537670" />
+    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup" timestamp="1609674990458">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup/0.0.1366.728@0.0.1366.728" timestamp="1607502984073" />
+    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup/0.0.1366.728@0.0.1366.728" timestamp="1609674990458" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
