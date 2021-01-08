@@ -9,24 +9,39 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
+import { Redirect } from "react-router-dom";
 
 const CreateRoom = (props) => {
   const [password, setPassword] = useState(null);
   const [timeStep, setTimeStep] = useState(null);
+  const [waitingRoom, setWaitingRoom] = useState(null);
+  const [open, setOpen] = useState(false);
+
   const authenticationContext = useContext(AuthenticationContext);
 
   const handleClickCreate = (password, timeStep) => {
     const socketData = {
-        password: password,
-        timeStep: timeStep,
-        userId: authenticationContext.authenState.userInfo._id
-    }
+      password: password,
+      timeStep: timeStep,
+      userId: authenticationContext.authenState.userInfo._id,
+    };
     setOpen(false);
-
     socket.emit("createRoom", socketData);
+    socket.on("inWaiting", (dataSocket) => {
+      setWaitingRoom(dataSocket);
+    });
   };
 
-  const [open, setOpen] = React.useState(false);
+  if (waitingRoom) {
+    return (
+      <Redirect
+        to={{
+          pathname: `/game/${waitingRoom._id}`,
+          state: { roomInfo: waitingRoom },
+        }}
+      />
+    );
+  }
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -92,7 +107,11 @@ const CreateRoom = (props) => {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button variant="contained" onClick={() => handleClickCreate(password, timeStep)} color="primary">
+          <Button
+            variant="contained"
+            onClick={() => handleClickCreate(password, timeStep)}
+            color="primary"
+          >
             Create
           </Button>
         </DialogActions>
