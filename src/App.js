@@ -3,7 +3,6 @@ import "./App.css";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import Signup from "./components/Signup/signup";
 import Login from "./components/Login/login";
-import OnlineUsers from "./components/OnlineUsers/online-users";
 import { createMuiTheme, CssBaseline, ThemeProvider } from "@material-ui/core";
 import Game from "./components/Game/game";
 import PublicRoute from "./router/public-router";
@@ -12,7 +11,7 @@ import {AuthenticationProvider} from "./providers/authenticationProvider";
 import Home from "./components/Home/home";
 import Chat from "./components/Chat/chat";
 import RoomList from "./components/RoomList/room-list";
-import TopPlayers from "./components/Top Players/topPlayers";
+import Header from "./components/Header/header";
 
 function App() {
   const darkTheme = createMuiTheme({
@@ -36,7 +35,6 @@ function App() {
             <PrivateRoute path="/home" component={Home} />
             <PrivateRoute path="/game/:roomId" component={Game} />
             <PrivateRoute path="/chat" component={Chat} />
-            <PrivateRoute path="/top-players" component={TopPlayers} />
           </Switch>
         </BrowserRouter>
       </AuthenticationProvider>
