@@ -19,7 +19,6 @@ const Signup = () => {
   const [confirmedPassword, setConfirmedPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -45,9 +44,6 @@ const Signup = () => {
         break;
       case "lastName":
         setLastName(e.target.value);
-        break;
-      case "phoneNumber":
-        setPhoneNumber(e.target.value);
         break;
 
       default:
@@ -82,8 +78,7 @@ const Signup = () => {
         username: username,
         password: password,
         firstName: firstName,
-        lastName: lastName,
-        phoneNumber: phoneNumber,
+        lastName: lastName
       })
       .then(
         (res) => {
@@ -97,7 +92,7 @@ const Signup = () => {
   };
 
   return (
-    <Grid container spacing={3} className={classes.root}>
+    <Grid container className={classes.root}>
       <Hidden smDown>
         <Grid item md={7} className={classes.image} />
       </Hidden>
@@ -169,17 +164,6 @@ const Signup = () => {
                 </Grid>
               </Grid>
 
-              <TextField
-                error={error}
-                helperText={errorMessage}
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                id="phoneNumber"
-                label="Phone number"
-                name="phoneNumber"
-                onChange={handleChangeTextField}
-              />
               <TextField
                 error={error}
                 helperText={errorMessage}
