@@ -14,6 +14,7 @@ import TabPanel from "./tabpanel";
 import OnlineUsers from "../OnlineUsers/online-users";
 import FinishedBoards from "../FinishedBoards/finishedBoards";
 import Matching from "../Matching/matching";
+import CreateRoom from "../CreateRoom/createRoom";
 import InputBase from "@material-ui/core/InputBase";
 import IconButton from "@material-ui/core/IconButton";
 import SendIcon from "@material-ui/icons/Send";
@@ -70,6 +71,9 @@ const Home = () => {
                     <Grid container spacing={1}>
                         <Grid item xs={4}>
                             <Matching/>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <CreateRoom />
                         </Grid>
                     </Grid>
                     <Grid container>
