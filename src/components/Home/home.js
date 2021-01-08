@@ -7,14 +7,18 @@ import JoinRoom from "../JoinRoom/join-room";
 import { AuthenticationContext } from "../../providers/authenticationProvider";
 import socket from "../../socket.io/socket.io";
 import { apiGetOnlineUsers } from "../../service/user-service";
+import { apiGetAllRooms } from "../../service/room-service";
+import ListRoom from "../ListRoom/list-room";
 
 const Home = (props) => {
   const classes = useStyles();
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [loadOnlineUsers, setLoadOnlineUsers] = useState(true);
+  const [rooms, setRooms] = useState([]);
+  const [loadRooms, setLoadRooms] = useState(true);
   const authenticationContext = useContext(AuthenticationContext);
 
-  const loadAllOnlineUsers = () => {
+  const handleloadAllOnlineUsers = () => {
     apiGetOnlineUsers()
       .then((res) => {
         setOnlineUsers(res.data);
@@ -23,14 +27,29 @@ const Home = (props) => {
       .catch((err) => console.log(err));
   };
 
+  const handleloadAllRooms = () => {
+    apiGetAllRooms()
+      .then((res) => {
+        setRooms(res.data);
+        setLoadRooms(false);
+      })
+      .catch((err) => console.log(err));
+  };
+
   useEffect(() => {
     if (loadOnlineUsers) {
-      loadAllOnlineUsers();
+      handleloadAllOnlineUsers();
     }
   }, [loadOnlineUsers]);
 
+  useEffect(() => {
+    if (loadRooms) {
+      handleloadAllRooms();
+    }
+  }, [loadRooms]);
+
   socket.on("update-online-users", () => {
-    setLoadOnlineUsers(true)
+    setLoadOnlineUsers(true);
   });
 
   useEffect(() => {
@@ -46,22 +65,17 @@ const Home = (props) => {
         <Grid item xs={4}>
           <OnlineUsers data={onlineUsers} />
         </Grid>
-        <Grid item xs={8} spacing={4}>
+        <Grid item xs={8}>
           <Grid container spacing={1}>
             <JoinRoom />
           </Grid>
-          <Grid container spacing={1}>
+          <Grid>
             <Grid item xs={4}>
               <Matching />
             </Grid>
           </Grid>
-          <Grid container>
-            <Grid item xs={9}>
-              {/* <Hidden smDown>
-                <img src="/img/caro.svg" className={classes.image} alt="Img" />
-              </Hidden> */}
-              {/* <ListRoom /> */}
-            </Grid>
+          <Grid>
+            <ListRoom data={rooms} />
           </Grid>
         </Grid>
       </Grid>
