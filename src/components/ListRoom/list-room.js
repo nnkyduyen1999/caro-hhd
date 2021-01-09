@@ -9,7 +9,8 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import LockIcon from "@material-ui/icons/Lock";
-
+import PasswordModal from "../Modal/password-modal";
+import {useHistory} from 'react-router-dom'
 const columns = [
   { id: "lock" },
   { id: "id", label: "ID" },
@@ -71,6 +72,10 @@ const ListRoom = (props) => {
   const [rows, setRows] = useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [roomId, setRoomId] = useState('');
+  const [roomPass, setRoomPass] = useState('');
+  const [open, setOpen] = useState(false);
+  const history = useHistory();
 
   const mapDataToRow = (data) => {
     return data.map(function (item) {
@@ -86,6 +91,7 @@ const ListRoom = (props) => {
         xPlayer: item.xPlayerUsername,
         oPlayer: item.oPlayerUsername,
         status: status,
+        password: item.password
       };
     });
   };
@@ -101,6 +107,14 @@ const ListRoom = (props) => {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
+  };
+
+  const handleOpen = () => {
+      setOpen(true);
+  };
+
+  const handleClose = () => {
+      setOpen(false);
   };
 
   return (
@@ -128,8 +142,19 @@ const ListRoom = (props) => {
             {mapDataToRow(props.data)
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
+                // console.log(row);
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code}
+                            onClick={() => {
+                              if(row.password !== '') {
+                                setRoomId(row.id);
+                                setRoomPass(row.password);
+                                handleOpen();
+                              }
+                              else
+                                history.push(`/room/${row.id}`)
+                            }}
+                  >
                     {columns.map((column) => {
                       const value = row[column.id];
                       return (
@@ -155,6 +180,7 @@ const ListRoom = (props) => {
         onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
       />
+      <PasswordModal roomId={roomId} roomPass={roomPass} open={open} handleOpen={handleOpen} handleClose={handleClose}/>
     </Paper>
     //       </div>
     //     </div>
