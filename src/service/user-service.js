@@ -1,8 +1,12 @@
 import axios from 'axios'
 
-axios.defaults.baseURL = process.env.REACT_APP_API_ENDPOINT
+axios.defaults.baseURL = `${process.env.REACT_APP_API_ENDPOINT}`;
 
 export const apiGetOnlineUsers = () => {
-    return axios.get('/user/online')
+    return axios.get('/user/online', {
+        headers: {
+            "Authorization": `Bearer ${localStorage.getItem('token')}`
+        }
+    })
 }
 
