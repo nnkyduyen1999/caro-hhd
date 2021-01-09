@@ -9,11 +9,10 @@ import PublicRoute from "./router/public-router";
 import PrivateRoute from "./router/private-router";
 import {AuthenticationProvider} from "./providers/authenticationProvider";
 import Home from "./components/Home/home";
-import Chat from "./components/Chat/chat";
 import RoomList from "./components/RoomList/room-list";
-import Header from "./components/Header/header";
 import TopPlayers from "./components/TopPlayers/topPlayers";
 import History from "./components/History/history";
+import Activate from "./components/Activate/activate";
 
 function App() {
   const darkTheme = createMuiTheme({
@@ -33,6 +32,7 @@ function App() {
             <PublicRoute restricted={true} component={Login} path="/login" exact/>
             <PublicRoute component={Signup} path="/signup" exact/>
             <PublicRoute component={RoomList} path="/room" exact/>
+            <PublicRoute component={Activate} path="/user/activate/:token" exact/>
             <PrivateRoute path="/top-players" component={TopPlayers} />
             <PrivateRoute path="/home" component={Home} />
             <PrivateRoute path="/game/:roomId" component={Game} />

@@ -10,11 +10,7 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { Link as RouterLink } from "react-router-dom";
 import Avatar from "@material-ui/core/Avatar";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
 import Divider from "@material-ui/core/Divider";
-import { Icon, withStyles } from "@material-ui/core";
 import { AuthenticationContext } from "../../providers/authenticationProvider";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
