@@ -11,6 +11,7 @@ import socket from "../../socket.io/socket.io";
 import { apiGetOnlineUsers } from "../../service/user-service";
 import { apiGetAllRooms } from "../../service/room-service";
 import ListRoom from "../ListRoom/list-room";
+import { NEW_CONNECT, NEW_ROOM_CREATED, UPDATE_ONLINE_USERS } from "../../socket.io/socket-event";
 
 const Home = (props) => {
   const classes = useStyles();
@@ -49,20 +50,19 @@ const Home = (props) => {
     if (loadRooms) {
       handleloadAllRooms();
     }
-    console.log("load room", loadRooms);
   }, [loadRooms]);
 
-  socket.on("update-online-users", () => {
+  socket.on(UPDATE_ONLINE_USERS, () => {
     setLoadOnlineUsers(true);
   });
 
-  socket.on("newRoomCreated", () => {
+  socket.on(NEW_ROOM_CREATED, () => {
     setLoadRooms(true);
   });
 
   useEffect(() => {
     socket.emit(
-      "new-connection",
+      NEW_CONNECT,
       authenticationContext.authenState.userInfo._id
     );
   }, [authenticationContext.authenState.userInfo]);
