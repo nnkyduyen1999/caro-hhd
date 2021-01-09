@@ -4,7 +4,7 @@ import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import TextField from "@material-ui/core/TextField";
 import {Button} from "@material-ui/core";
-
+import {useHistory} from 'react-router-dom'
 const useStyles = makeStyles((theme) => ({
     modal: {
         display: 'flex',
@@ -25,25 +25,30 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function PasswordModal() {
+export default function PasswordModal({roomId, open, handleOpen, handleClose, roomPass}) {
     const classes = useStyles();
     const [value, setValue] = React.useState('');
-    const [open, setOpen] = React.useState(false);
+    // const [open, setOpen] = React.useState(false);
     const [error, setError] = React.useState(false);
     const [errorMessage, setErrorMessage] = React.useState(null);
-
-    const handleOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
+    const history = useHistory();
+    // const handleOpen = () => {
+    //     setOpen(true);
+    // };
+    //
+    // const handleClose = () => {
+    //     setOpen(false);
+    // };
 
     const handleJoinRoom = () => {
         if(value === '') {
             setError(true);
             setErrorMessage('Vui lòng nhập mật khẩu room')
+        } else if(value !== roomPass){
+            setError(true);
+            setErrorMessage('Sai mật khẩu room')
+        } else {
+            history.push(`room/${roomId}`)
         }
     }
 
@@ -73,7 +78,7 @@ export default function PasswordModal() {
                     <TextField
                         error={error}
                         helperText={errorMessage}
-                        variant="outlined"
+                        variant="standard"
                         margin="dense"
                         required
                         fullWidth
@@ -88,7 +93,7 @@ export default function PasswordModal() {
                         <Button
                             variant="contained"
                             color="secondary"
-                            onClick={() => setOpen(false)}
+                            onClick={handleClose}
                             style={{marginRight: 20}}
                         >
                             Cancel
