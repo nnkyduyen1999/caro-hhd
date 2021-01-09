@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import { Button } from "@material-ui/core";
 import { AuthenticationContext } from "../../providers/authenticationProvider";
 import socket from "../../socket.io/socket.io";
