@@ -67,18 +67,18 @@ export default function Header({homeActive, topPlayerActive, historyActive}) {
                         CARO ONLINE
                     </Typography>
                     <nav style={{flex: 1, flexDirection: "row", textAlign: 'center'}}>
-                        <Link component={RouterLink} to="#" variant="button"
+                        <Link component={RouterLink} to="/home" variant="button"
                               className={classes.link} underline='none'
                               color={homeActive ? 'textPrimary' : 'textSecondary'}
                         >
                             Home
                         </Link>
-                        <Link component={RouterLink} to="#" variant="button"
+                        <Link component={RouterLink} to="/top-players" variant="button"
                               className={classes.link} underline='none'
                               color={topPlayerActive ? 'textPrimary' : 'textSecondary'}>
                             Top player
                         </Link>
-                        <Link component={RouterLink} to="#" variant="button"
+                        <Link component={RouterLink} to="/history" variant="button"
                               className={classes.link} underline='none'
                               color={historyActive ? 'textPrimary' : 'textSecondary'}>
                             History
