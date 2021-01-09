@@ -6,10 +6,10 @@ import socket from "../../socket.io/socket.io";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 import { Redirect } from "react-router-dom";
+import GroupAddIcon from '@material-ui/icons/GroupAdd';
 
 const CreateRoom = (props) => {
   const [password, setPassword] = useState(null);
@@ -67,9 +67,9 @@ const CreateRoom = (props) => {
   return (
     <div>
       <Button
-        variant="outlined"
+        variant="contained"
         color="primary"
-        endIcon={<SportsEsportsIcon />}
+        endIcon={<GroupAddIcon />}
         onClick={handleClickOpen}
         style={{ marginTop: 20 }}
       >
@@ -88,12 +88,11 @@ const CreateRoom = (props) => {
             id="password"
             name="password"
             label="Room password"
-            type="text"
+            type="password"
             onChange={handleChangeTextField}
             fullWidth
           />
           <TextField
-            autoFocus
             margin="dense"
             id="timeStep"
             name="timeStep"
@@ -104,7 +103,7 @@ const CreateRoom = (props) => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleClose} color="secondary">
             Cancel
           </Button>
           <Button

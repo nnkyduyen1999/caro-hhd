@@ -79,11 +79,11 @@ const Home = (props) => {
             <Grid container spacing={1}>
               <JoinRoom />
             </Grid>
-            <Grid>
-              <Grid item xs={4}>
+            <Grid container>
+              <Grid item xs={3}>
                 <Matching />
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <CreateRoom />
               </Grid>
             </Grid>
