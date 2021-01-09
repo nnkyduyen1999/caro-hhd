@@ -3,6 +3,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useStyles } from "./useStyle";
 import OnlineUsers from "../OnlineUsers/online-users";
 import Matching from "../Matching/matching";
+import CreateRoom from "../CreateRoom/createRoom";
 import JoinRoom from "../JoinRoom/join-room";
 import Header from "../Header/header";
 import { AuthenticationContext } from "../../providers/authenticationProvider";
@@ -33,6 +34,7 @@ const Home = (props) => {
       .then((res) => {
         setRooms(res.data);
         setLoadRooms(false);
+        console.log(res.data);
       })
       .catch((err) => console.log(err));
   };
@@ -47,10 +49,15 @@ const Home = (props) => {
     if (loadRooms) {
       handleloadAllRooms();
     }
+    console.log("load room", loadRooms);
   }, [loadRooms]);
 
   socket.on("update-online-users", () => {
     setLoadOnlineUsers(true);
+  });
+
+  socket.on("newRoomCreated", () => {
+    setLoadRooms(true);
   });
 
   useEffect(() => {
@@ -62,27 +69,30 @@ const Home = (props) => {
 
   return (
     <>
-    <Header homeActive={true}/>
-    <Container className={classes.root}>
-      <Grid container spacing={3}>
-        <Grid item xs={4}>
-          <OnlineUsers data={onlineUsers} />
-        </Grid>
-        <Grid item xs={8}>
-          <Grid container spacing={1}>
-            <JoinRoom />
+      <Header homeActive={true} />
+      <Container className={classes.root}>
+        <Grid container spacing={3}>
+          <Grid item xs={4}>
+            <OnlineUsers data={onlineUsers} />
           </Grid>
-          <Grid>
-            <Grid item xs={4}>
-              <Matching />
+          <Grid item xs={8}>
+            <Grid container spacing={1}>
+              <JoinRoom />
+            </Grid>
+            <Grid>
+              <Grid item xs={4}>
+                <Matching />
+              </Grid>
+              <Grid item xs={4}>
+                <CreateRoom />
+              </Grid>
+            </Grid>
+            <Grid>
+              <ListRoom data={rooms} />
             </Grid>
           </Grid>
-          <Grid>
-            <ListRoom data={rooms} />
-          </Grid>
         </Grid>
-      </Grid>
-    </Container>
+      </Container>
     </>
   );
 };
