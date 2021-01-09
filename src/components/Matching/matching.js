@@ -4,22 +4,28 @@ import { Button } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
 import { AuthenticationContext } from "../../providers/authenticationProvider";
 import socket from "../../socket.io/socket.io";
+import { JOIN_ROOM, MATCHING, SUCCESSFULLY_MATCHED } from "../../socket.io/socket-event";
 
 const Matching = (props) => {
   const [createdRoom, setCreatedRoom] = useState(null);
   const authenticationContext = useContext(AuthenticationContext);
   const handleClick = () => {
-    console.log("click match please wait");
-    socket.emit("matching", authenticationContext.authenState.userInfo);
+    const sendData = {
+      _id: authenticationContext.authenState.userInfo._id,
+      trophy: authenticationContext.authenState.userInfo.trophy,
+      username: authenticationContext.authenState.userInfo.username
+    }
+    socket.emit(MATCHING, sendData);
   };
 
-  socket.on("successfullyMatched", (data) => {
-    socket.emit('joinRoom', data._id)
-    setCreatedRoom(data)
+  socket.on(SUCCESSFULLY_MATCHED, (roomId) => {
+    socket.emit(JOIN_ROOM, roomId)
+    setCreatedRoom(roomId)
   });
 
   if (createdRoom) {
-    return <Redirect to={{pathname: `/game/${createdRoom._id}`, state: {roomInfo: createdRoom}}} />;
+    console.log(createdRoom)
+    return <Redirect to={{pathname: `/game/${createdRoom}`, state: {roomInfo: createdRoom}}} />;
   }
 
   return (
