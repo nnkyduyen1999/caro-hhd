@@ -60,9 +60,9 @@ export default function PasswordModal({roomId, open, handleOpen, handleClose, ro
 
     return (
         <div>
-            <button type="button" onClick={handleOpen}>
-                react-spring
-            </button>
+            {/*<button type="button" onClick={handleOpen}>*/}
+            {/*    react-spring*/}
+            {/*</button>*/}
             <Modal
                 className={classes.modal}
                 open={open}

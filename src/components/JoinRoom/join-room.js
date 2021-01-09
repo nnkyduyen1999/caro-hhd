@@ -1,28 +1,48 @@
 import React, {useContext, useState} from "react";
-import {Button, Grid, Paper} from "@material-ui/core";
+import {Button, Grid, Paper, Typography} from "@material-ui/core";
 import {Redirect} from "react-router-dom";
-import {AuthenticationContext} from "../../providers/authenticationProvider";
+import {useHistory} from "react-router-dom";
 import socket from "../../socket.io/socket.io";
 import InputBase from "@material-ui/core/InputBase";
 import makeStyles from "@material-ui/core/styles/makeStyles";
+import {apiGetRoomById} from "../../service/room-service";
+import PasswordModal from "../Modal/password-modal";
 
 const JoinRoom = (props) => {
     const classes = useStyles();
     const [createdRoom, setCreatedRoom] = useState(null);
-    const authenticationContext = useContext(AuthenticationContext);
+    const [room, setRoom] = useState({});
+    const [open, setOpen] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [value, setValue] = useState('');
+
     const handleClick = () => {
-        console.log("click match please wait");
-        socket.emit("matching", authenticationContext.authenState.userInfo);
+        if (value === '') {
+            setErrorMessage("Vui lòng nhập room id");
+        } else (
+            apiGetRoomById(value).then(res => {
+                setRoom(res.data.room);
+                setOpen(true);
+            }).catch(err => {
+                setErrorMessage('room not found')
+            })
+        )
+
     };
 
-    socket.on("successfullyMatched", (data) => {
-        socket.emit('joinRoom', data._id)
-        setCreatedRoom(data)
-    });
-
-    if (createdRoom) {
-        return <Redirect to={{pathname: `/game/${createdRoom._id}`, state: {roomInfo: createdRoom}}}/>;
+    const handleChange = (e) => {
+        setErrorMessage('');
+        setValue(e.target.value);
     }
+
+    // socket.on("successfullyMatched", (data) => {
+    //     socket.emit('joinRoom', data._id)
+    //     setCreatedRoom(data)
+    // });
+    //
+    // if (createdRoom) {
+    //     return <Redirect to={{pathname: `/game/${createdRoom._id}`, state: {roomInfo: createdRoom}}}/>;
+    // }
 
     return (
         <>
@@ -31,25 +51,24 @@ const JoinRoom = (props) => {
                     <InputBase
                         className={classes.input}
                         placeholder="nhập room id..."
-                        // onChange={handleNewMessageChange}
-                        // value={newMessage}
-                        // onKeyDown={handleKeyDown}
+                        onChange={handleChange}
                     />
-                    {/*<IconButton className={classes.iconButton}>*/}
-                    {/*  <SendIcon/>*/}
-                    {/*</IconButton>*/}
                 </Paper>
+                <Typography className={classes.error}>{errorMessage}</Typography>
             </Grid>
             <Grid item md={4}>
                 <Button
                     variant="contained"
                     color="primary"
-                    // endIcon={<SportsEsportsIcon />}
-                    // onClick={handleClick}
+                    onClick={handleClick}
                 >
                     Join room
                 </Button>
             </Grid>
+            <PasswordModal open={open} roomId={room._id}
+                           handleClose={() => setOpen(true)}
+                           handleOpen={() => setOpen(false)}
+                           roomPass={room.password}/>
         </>
 
     );
@@ -82,6 +101,10 @@ const useStyles = makeStyles(theme => ({
         overflowY: 'auto',
         maxHeight: 300,
     },
+    error: {
+        color: 'red',
+        marginTop: theme.spacing(0.5),
+    }
 }));
 
 
