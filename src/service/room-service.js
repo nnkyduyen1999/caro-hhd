@@ -9,3 +9,7 @@ export const apiGetAllRooms = () => {
 export const apiGetRoomById = (id) => {
   return axios.get(`/room/${id}`);
 };
+
+export const apiLoadRoomWithPlayerInfoById = (id) => {
+  return axios.get(`/room/with-player-info/${id}`);
+};

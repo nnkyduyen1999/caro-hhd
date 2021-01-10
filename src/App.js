@@ -14,6 +14,7 @@ import RoomList from "./components/RoomList/room-list";
 import Header from "./components/Header/header";
 import TopPlayers from "./components/TopPlayers/topPlayers";
 import History from "./components/History/history";
+import Room from "./components/Room/room";
 
 function App() {
   const darkTheme = createMuiTheme({
@@ -36,6 +37,7 @@ function App() {
             <PrivateRoute path="/top-players" component={TopPlayers} />
             <PrivateRoute path="/home" component={Home} />
             <PrivateRoute path="/game/:roomId" component={Game} />
+            <PrivateRoute path="/room/:roomId" component={Room} />
             <PrivateRoute path="/history" component={History} />
             {/*<PrivateRoute path="/chat" component={Chat} />*/}
           </Switch>
