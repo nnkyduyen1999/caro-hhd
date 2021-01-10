@@ -1,17 +1,16 @@
-import React from "react";
-import Avatar from "@material-ui/core/Avatar";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import axios from "axios";
+import Snackbar from "@material-ui/core/Snackbar";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import Alert from "@material-ui/lab/Alert";
 
 function Copyright() {
   return (
@@ -53,9 +52,39 @@ const CustomButton = withStyles((theme) => ({
   },
 }))(Button);
 
-export default function Activate() {
+export default function Activate({ match }) {
   const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+  const [succeed, setSucceed] = React.useState(false);
+  const [msg, setMsg] = useState(``);
 
+  const handleClick = () => {
+    const token = match.params.token;
+    axios
+      .post(`${process.env.REACT_APP_API_ENDPOINT}/activate`, {
+        token: token,
+      })
+      .then(
+        (res) => {
+          setMsg(res.data.message);
+          setSucceed(true);
+          // localStorage.setItem('emailToken', res.data.tokenFromEmail);
+          // history.push(`/user/activate/${emailToken}`);
+        },
+        (err) => {
+          setMsg(err.response.data.message);
+          setSucceed(false);
+        }
+      );
+    setOpen(true);
+  };
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
   return (
     <Container component="main" maxWidth="md">
       <CssBaseline />
@@ -79,9 +108,21 @@ export default function Activate() {
           variant="contained"
           color="primary"
           className={classes.submit}
+          onClick={handleClick}
         >
           Verify Email
         </CustomButton>
+        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          {succeed ? (
+            <Alert onClose={handleClose} severity="success">
+              {msg}
+            </Alert>
+          ) : (
+            <Alert onClose={handleClose} severity="error">
+              {msg}
+            </Alert>
+          )}
+        </Snackbar>
       </div>
       <Box mt={8}>
         <Copyright />
