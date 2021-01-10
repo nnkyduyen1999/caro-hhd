@@ -35,7 +35,7 @@ const CreateRoom = (props) => {
     return (
       <Redirect
         to={{
-          pathname: `/game/${waitingRoom._id}`,
+          pathname: `/room/${waitingRoom._id}`,
           state: { roomInfo: waitingRoom },
         }}
       />

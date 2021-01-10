@@ -16,14 +16,24 @@ import { apiLoadRoomWithPlayerInfoById } from "../../service/room-service";
 import PlaySound from "../PlaySound/play-sound";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import BecomePlayerBtn from "./BecomePlayerBtn/become-player-btn";
+import socket from "../../socket.io/socket.io";
+import {
+  BECOME_PLAYER,
+  UPDATE_CURRENT_PLAYER,
+  JOIN_ROOM,
+} from "../../socket.io/socket-event";
 
 const Room = (props) => {
   const classes = useStyles();
   const { roomId } = useParams();
   const [roomInfo, setRoomInfo] = useState(null);
+  const [isCurrPlayer, setIsCurrPlayer] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  // const [xReady, setXReady] = useState
+  const [xReady, setXReady] = useState(false);
+  const [yReady, setYReady] = useState(false);
   const auth = useContext(AuthenticationContext);
+
+  socket.emit(JOIN_ROOM, roomId);
 
   useEffect(() => {
     apiLoadRoomWithPlayerInfoById(roomId)
@@ -31,9 +41,48 @@ const Room = (props) => {
         console.log(res.data);
         setRoomInfo(res.data);
         setIsLoading(false);
+        if (
+          auth.authenState.userInfo._id === res.data.xCurrentPlayer ||
+          auth.authenState.userInfo._id === res.data.oCurrentPlayer
+        ) {
+          setIsCurrPlayer(true);
+        }
       })
       .catch((err) => console.log(err));
   }, []);
+
+  const handleOnClickBecomePlayer = (player) => {
+    const sendData = {
+      user: {
+        _id: auth.authenState.userInfo._id,
+        // trophy: auth.authenState.userInfo.trophy,
+        username: auth.authenState.userInfo.username,
+      },
+      player: player,
+      roomId: roomId,
+    };
+    socket.emit(BECOME_PLAYER, sendData);
+  };
+
+  socket.on(UPDATE_CURRENT_PLAYER, (data) => {
+    console.log("socket update ", data, roomInfo);
+    if (data.player === "X") {
+      setRoomInfo({
+        ...roomInfo,
+        xCurrentPlayer: data.user._id,
+        xPlayerUsername: data.user.username,
+      });
+    } else if (data.player === "O") {
+      setRoomInfo({
+        ...roomInfo,
+        oCurrentPlayer: data.user._id,
+        oPlayerUsername: data.user.username,
+      });
+    }
+    if (auth.authenState.userInfo._id === data.user._id) {
+      setIsCurrPlayer(true);
+    }
+  });
 
   return isLoading ? (
     <CircularProgress />
@@ -71,7 +120,17 @@ const Room = (props) => {
               </Box>
             </Grid>
           </Grid>
-          
+          <Grid container className={classes.paper} justify="center">
+            <Grid item xs={6}>
+              <Button
+                variant="contained"
+                color="primary"
+                // onClick={handleGiveIn}
+              >
+                READY
+              </Button>
+            </Grid>
+          </Grid>
           <Grid container className={classes.paper} justify="center">
             <Grid item xs={6}>
               <Button
@@ -121,11 +180,14 @@ const Room = (props) => {
                   className={classes.large}
                 />
                 <Box className={classes.userName}>
-                  {roomInfo.xPlayerUsername ? (
+                  {roomInfo.xCurrentPlayer ? (
                     roomInfo.xPlayerUsername
-                  ) : (
-                    <BecomePlayerBtn player="X" />
-                  )}
+                  ) : !isCurrPlayer ? (
+                    <BecomePlayerBtn
+                      player="X"
+                      onClick={() => handleOnClickBecomePlayer("X")}
+                    />
+                  ) : null}
                 </Box>
               </Box>
             </Grid>
@@ -144,11 +206,14 @@ const Room = (props) => {
                   className={classes.large}
                 />
                 <Box className={classes.userName}>
-                  {roomInfo.oPlayerUsername ? (
+                  {roomInfo.oCurrentPlayer ? (
                     roomInfo.oPlayerUsername
-                  ) : (
-                    <BecomePlayerBtn player="O" />
-                  )}
+                  ) : !isCurrPlayer ? (
+                    <BecomePlayerBtn
+                      player="O"
+                      onClick={() => handleOnClickBecomePlayer("O")}
+                    />
+                  ) : null}
                 </Box>
               </Box>
             </Grid>

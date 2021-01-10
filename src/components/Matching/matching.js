@@ -4,7 +4,7 @@ import { Button } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
 import { AuthenticationContext } from "../../providers/authenticationProvider";
 import socket from "../../socket.io/socket.io";
-import { JOIN_ROOM, MATCHING, SUCCESSFULLY_MATCHED } from "../../socket.io/socket-event";
+import { MATCHING, SUCCESSFULLY_MATCHED } from "../../socket.io/socket-event";
 
 const Matching = (props) => {
   const [createdRoom, setCreatedRoom] = useState(null);
@@ -19,7 +19,6 @@ const Matching = (props) => {
   };
 
   socket.on(SUCCESSFULLY_MATCHED, (roomId) => {
-    socket.emit(JOIN_ROOM, roomId)
     setCreatedRoom(roomId)
   });
 
