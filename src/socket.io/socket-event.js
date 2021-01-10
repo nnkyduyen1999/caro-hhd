@@ -27,3 +27,5 @@ export const IN_WAITING = "inWaiting";
 export const BECOME_PLAYER = "becomePlayer";
 
 export const UPDATE_CURRENT_PLAYER = "updateCurrentPlayer";
+
+export const UPDATE_READY_STATUS = "updateReadyStatus";

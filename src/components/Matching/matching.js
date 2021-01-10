@@ -24,7 +24,7 @@ const Matching = (props) => {
 
   if (createdRoom) {
     console.log(createdRoom)
-    return <Redirect to={{pathname: `/game/${createdRoom}`, state: {roomInfo: createdRoom}}} />;
+    return <Redirect to={{pathname: `/room/${createdRoom}`, state: {roomInfo: createdRoom}}} />;
   }
 
   return (

@@ -21,16 +21,15 @@ import {
   BECOME_PLAYER,
   UPDATE_CURRENT_PLAYER,
   JOIN_ROOM,
+  UPDATE_READY_STATUS,
 } from "../../socket.io/socket-event";
 
 const Room = (props) => {
   const classes = useStyles();
   const { roomId } = useParams();
   const [roomInfo, setRoomInfo] = useState(null);
-  const [isCurrPlayer, setIsCurrPlayer] = useState(false);
+  const [isCurrPlayer, setIsCurrPlayer] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [xReady, setXReady] = useState(false);
-  const [yReady, setYReady] = useState(false);
   const auth = useContext(AuthenticationContext);
 
   socket.emit(JOIN_ROOM, roomId);
@@ -41,15 +40,22 @@ const Room = (props) => {
         console.log(res.data);
         setRoomInfo(res.data);
         setIsLoading(false);
-        if (
-          auth.authenState.userInfo._id === res.data.xCurrentPlayer ||
-          auth.authenState.userInfo._id === res.data.oCurrentPlayer
-        ) {
-          setIsCurrPlayer(true);
+        if (auth.authenState.userInfo._id === res.data.xCurrentPlayer) {
+          setIsCurrPlayer("X");
+        } else if (auth.authenState.userInfo._id === res.data.oCurrentPlayer) {
+          setIsCurrPlayer("O");
         }
       })
       .catch((err) => console.log(err));
   }, []);
+
+  const renderReadyStatus = (player, status) => {
+    if (player === "X") {
+      return status ? <div>READY</div> : null;
+    } else if (player === "O") {
+      return status ? <div>READY</div> : null;
+    }
+  };
 
   const handleOnClickBecomePlayer = (player) => {
     const sendData = {
@@ -65,24 +71,55 @@ const Room = (props) => {
   };
 
   socket.on(UPDATE_CURRENT_PLAYER, (data) => {
-    console.log("socket update ", data, roomInfo);
     if (data.player === "X") {
       setRoomInfo({
         ...roomInfo,
         xCurrentPlayer: data.user._id,
         xPlayerUsername: data.user.username,
       });
+      if (auth.authenState.userInfo._id === data.user._id) {
+        setIsCurrPlayer("X");
+      }
     } else if (data.player === "O") {
       setRoomInfo({
         ...roomInfo,
         oCurrentPlayer: data.user._id,
         oPlayerUsername: data.user.username,
       });
-    }
-    if (auth.authenState.userInfo._id === data.user._id) {
-      setIsCurrPlayer(true);
+      if (auth.authenState.userInfo._id === data.user._id) {
+        setIsCurrPlayer("O");
+      }
     }
   });
+
+  const handleOnClickReady = () => {
+    if (isCurrPlayer) {
+      const sendData = {
+        roomId: roomId,
+        player: isCurrPlayer,
+        status:
+          isCurrPlayer === "X"
+            ? !roomInfo.xPlayerReady
+            : !roomInfo.oPlayerReady,
+      };
+      console.log(sendData)
+      socket.emit(UPDATE_READY_STATUS, sendData)
+    }
+  };
+
+  socket.on(UPDATE_READY_STATUS, data => {
+    if (data.player === "X") {
+      setRoomInfo({
+        ...roomInfo,
+        xPlayerReady: data.status
+      });
+    } else if (data.player === 'O') {
+      setRoomInfo({
+        ...roomInfo,
+        oPlayerReady: data.status
+      });
+    }
+  })
 
   return isLoading ? (
     <CircularProgress />
@@ -120,17 +157,20 @@ const Room = (props) => {
               </Box>
             </Grid>
           </Grid>
-          <Grid container className={classes.paper} justify="center">
-            <Grid item xs={6}>
-              <Button
-                variant="contained"
-                color="primary"
-                // onClick={handleGiveIn}
-              >
-                READY
-              </Button>
+          {isCurrPlayer ? (
+            <Grid container className={classes.paper} justify="center">
+              <Grid item xs={6}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleOnClickReady}
+                >
+                  READY
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
+          ) : null}
+
           <Grid container className={classes.paper} justify="center">
             <Grid item xs={6}>
               <Button
@@ -189,6 +229,7 @@ const Room = (props) => {
                     />
                   ) : null}
                 </Box>
+                {renderReadyStatus("X", roomInfo.xPlayerReady)}
               </Box>
             </Grid>
             <Grid item xs={3}>
@@ -215,6 +256,7 @@ const Room = (props) => {
                     />
                   ) : null}
                 </Box>
+                {renderReadyStatus("O", roomInfo.oPlayerReady)}
               </Box>
             </Grid>
           </Grid>
