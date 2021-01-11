@@ -13,6 +13,8 @@ import RoomList from "./components/RoomList/room-list";
 import TopPlayers from "./components/TopPlayers/topPlayers";
 import History from "./components/History/history";
 import Activate from "./components/Activate/activate";
+import ForgetPassword from "./components/ForgetPassword/forgetPassword";
+import ResetPassword from "./components/ForgetPassword/resetPassword";
 
 function App() {
   const darkTheme = createMuiTheme({
@@ -33,6 +35,8 @@ function App() {
             <PublicRoute component={Signup} path="/signup" exact/>
             <PublicRoute component={RoomList} path="/room" exact/>
             <PublicRoute component={Activate} path="/user/activate/:token" exact/>
+            <PublicRoute component={ForgetPassword} path="/user/forget-password" exact/>
+            <PublicRoute component={ResetPassword} path="/user/reset-password/:token" exact/>
             <PrivateRoute path="/top-players" component={TopPlayers} />
             <PrivateRoute path="/home" component={Home} />
             <PrivateRoute path="/game/:roomId" component={Game} />
