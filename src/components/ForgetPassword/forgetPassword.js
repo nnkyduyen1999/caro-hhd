@@ -74,17 +74,20 @@ export default function ForgetPassword() {
       return;
     }
 
-    axios.post(`${process.env.REACT_APP_API_ENDPOINT}/forget-password`, {
-        email: email
-    }).then(res => {
+    axios
+      .post(`${process.env.REACT_APP_API_ENDPOINT}/forget-password`, {
+        email: email,
+      })
+      .then((res) => {
         if (res.status === 200) {
-            setIsErr(false);
-            setMsg(res.data.message);
+          setIsErr(false);
+          setMsg(res.data.message);
         }
-    }).catch(err => {
+      })
+      .catch((err) => {
         setIsErr(true);
         setMsg(err.response.data.message);
-    })
+      });
   };
 
   const renderAlert = (msg, isErr) => {
@@ -95,7 +98,6 @@ export default function ForgetPassword() {
       return <Alert severity={status}>{msg}</Alert>;
     }
   };
-
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -139,7 +141,7 @@ export default function ForgetPassword() {
             </Button>
             <Grid container>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/signup" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

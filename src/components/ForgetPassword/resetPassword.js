@@ -12,6 +12,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { Snackbar } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
+import axios from "axios";
 
 function Copyright() {
   return (
@@ -46,9 +47,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ResetPassword() {
+export default function ResetPassword({ match }) {
   const classes = useStyles();
-  const [oldPassword, setOldPassword] = useState(null);
   const [newPassword, setNewPassword] = useState(null);
   const [confirmPassword, setConfirmPassword] = useState(null);
   const [msg, setMsg] = useState(null);
@@ -64,17 +64,31 @@ export default function ResetPassword() {
     } else if (
       !confirmPassword ||
       !newPassword ||
-      !oldPassword ||
       confirmPassword === `` ||
-      oldPassword === `` ||
       newPassword === ``
     ) {
       setIsErr(true);
       setMsg("Please fill all field.");
-    } else if (newPassword === oldPassword) {
-      setIsErr(true);
-      setMsg("New password must be different from the old.");
+    } else {
+        axios
+        .post(`${process.env.REACT_APP_API_ENDPOINT}/reset-password`, {
+          token: match.params.token,
+          newPassword: newPassword
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            setIsErr(false);
+          } else {
+            setIsErr(true);
+          }
+          setMsg(res.data.message);
+        })
+        .catch((err) => {
+          setIsErr(true);
+          setMsg(err.response.data.message);
+        });
     }
+
     setOpen(true);
   };
 
@@ -102,9 +116,6 @@ export default function ResetPassword() {
 
   const handleTextChange = (e) => {
     switch (e.target.name) {
-      case `oldPassword`:
-        setOldPassword(e.target.value);
-        break;
       case `newPassword`:
         setNewPassword(e.target.value);
         break;
@@ -127,18 +138,6 @@ export default function ResetPassword() {
           Reset Password
         </Typography>
         <form className={classes.form} noValidate onSubmit={handleSubmitForm}>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="oldPassword"
-            label="Old Password"
-            name="oldPassword"
-            type="password"
-            autoFocus
-            onChange={(e) => handleTextChange(e)}
-          />
           <TextField
             variant="outlined"
             margin="normal"
