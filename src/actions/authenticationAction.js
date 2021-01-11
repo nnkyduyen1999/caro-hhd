@@ -2,6 +2,7 @@ import axios from "axios";
 
 export const LOGIN_SUCCESS = `LOGIN_SUCCESS`;
 export const LOGIN_FAILURE = `LOGIN_FAILURE`;
+export const LOGOUT_REQUEST = 'LOGOUT_REQUEST';
 axios.defaults.baseURL = process.env.REACT_APP_API_ENDPOINT;
 
 const login = (dispatch) => (username, password) => {
@@ -60,6 +61,10 @@ const loginFacebook = (dispatch) => (email, facebookId, givenName, familyName) =
         });
 }
 
-export {login, loginGoogle, loginFacebook};
+const logout = (dispatch) => () => {
+    dispatch({type: LOGOUT_REQUEST})
+}
+
+export {login, loginGoogle, loginFacebook, logout};
 
 

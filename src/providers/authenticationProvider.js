@@ -1,6 +1,6 @@
 import React, { useReducer } from 'react';
 import {authenReducer} from "../reducers/authenticationReducer";
-import {login, loginGoogle, loginFacebook} from "../actions/authenticationAction";
+import {login, loginGoogle, loginFacebook, logout} from "../actions/authenticationAction";
 
 const getInitialState = () => {
     const isAuth = localStorage.getItem('userInfo');
@@ -32,7 +32,8 @@ const AuthenticationProvider = (props) => {
                 authenState,
                 login: login(dispatch),
                 loginGoogle: loginGoogle(dispatch),
-                loginFacebook: loginFacebook(dispatch)
+                loginFacebook: loginFacebook(dispatch),
+                logout: logout(dispatch)
             }}
         >
             {props.children}

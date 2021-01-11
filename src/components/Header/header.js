@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Header({ homeActive, topPlayerActive, historyActive }) {
-  const { authenState } = useContext(AuthenticationContext);
+  const { authenState, logout } = useContext(AuthenticationContext);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -140,7 +140,7 @@ export default function Header({ homeActive, topPlayerActive, historyActive }) {
               <MenuItem onClick={handleClose}>Profile</MenuItem>
               <MenuItem onClick={handleClose}>My account</MenuItem>
               <Divider></Divider>
-              <MenuItem onClick={handleClose} leftIcon={<ExitToAppIcon />}>
+              <MenuItem onClick={logout} leftIcon={<ExitToAppIcon />}>
                 Sign out
               </MenuItem>
             </Menu>
