@@ -146,7 +146,7 @@ const ListRoom = (props) => {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row.code}
                             onClick={() => {
-                              if(row.password !== '') {
+                              if(row.password) {
                                 setRoomId(row.id);
                                 setRoomPass(row.password);
                                 handleOpen();

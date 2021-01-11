@@ -10,11 +10,11 @@ import PasswordModal from "../Modal/password-modal";
 
 const JoinRoom = (props) => {
     const classes = useStyles();
-    const [createdRoom, setCreatedRoom] = useState(null);
     const [room, setRoom] = useState({});
     const [open, setOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [value, setValue] = useState('');
+    const history = useHistory()
 
     const handleClick = () => {
         if (value === '') {
@@ -22,7 +22,11 @@ const JoinRoom = (props) => {
         } else (
             apiGetRoomById(value).then(res => {
                 setRoom(res.data.room);
-                setOpen(true);
+                if(!res.data.room.password) {
+                    history.push(`/room/${res.data.room._id}`)
+                } else {
+                    setOpen(true);
+                }
             }).catch(err => {
                 setErrorMessage('room not found')
             })
