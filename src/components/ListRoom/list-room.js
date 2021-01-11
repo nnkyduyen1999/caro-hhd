@@ -12,7 +12,7 @@ import LockIcon from "@material-ui/icons/Lock";
 import PasswordModal from "../Modal/password-modal";
 import { useHistory } from "react-router-dom";
 import socket from "../../socket.io/socket.io";
-import { UPDATE_CURRENT_PLAYER } from "../../socket.io/socket-event";
+import { START_GAME, UPDATE_CURRENT_PLAYER } from "../../socket.io/socket-event";
 const columns = [
   { id: "lock" },
   { id: "id", label: "ID" },
@@ -114,6 +114,17 @@ const ListRoom = (props) => {
       props.setData(temp);
     }
   });
+
+  socket.on(START_GAME, (roomId) => {
+    const index = props.data.findIndex((item) => item._id === roomId);
+    if (index !== -1) {
+      let temp = [...props.data];
+      temp[index]['isPlaying'] = true
+      props.setData(temp);
+    }
+  });
+
+
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);

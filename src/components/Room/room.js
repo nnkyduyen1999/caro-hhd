@@ -12,7 +12,10 @@ import { useStyles } from "./useStyle";
 import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { AuthenticationContext } from "../../providers/authenticationProvider";
-import { apiLoadRoomWithPlayerInfoById } from "../../service/room-service";
+import {
+  apiLoadRoomWithPlayerInfoById,
+  apiLoadLatestGameInRoomById,
+} from "../../service/room-service";
 import PlaySound from "../PlaySound/play-sound";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import BecomePlayerBtn from "./BecomePlayerBtn/become-player-btn";
@@ -22,18 +25,37 @@ import {
   UPDATE_CURRENT_PLAYER,
   JOIN_ROOM,
   UPDATE_READY_STATUS,
+  START_GAME,
+  REQUEST_MOVE,
+  ACCEPT_MOVE,
 } from "../../socket.io/socket-event";
+import Board from "../Board/board";
+import { BOARD_SIZE } from "../../global/constant";
+import { calculateWinner } from "../../service/calculateWinner";
 
 const Room = (props) => {
   const classes = useStyles();
   const { roomId } = useParams();
   const [roomInfo, setRoomInfo] = useState(null);
+  const [game, setGame] = useState(null);
   const [isCurrPlayer, setIsCurrPlayer] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const auth = useContext(AuthenticationContext);
 
+  // game state
+  const [history, setHistory] = useState([
+    { squares: Array(BOARD_SIZE * BOARD_SIZE).fill(null), location: null },
+  ]);
+  const [stepNumber, setStepNumber] = useState(0);
+  const [xIsNext, setXIsNext] = useState(true);
+  const [gameStt, setGameStt] = useState(`Bắt đầu X`);
+  const [isClickable, setIsClickable] = useState(true);
+  const [winningLine, setWinningLine] = useState([]);
+  const [latestLocation, setLatestLocation] = useState(null);
+
   socket.emit(JOIN_ROOM, roomId);
 
+  // load room info
   useEffect(() => {
     apiLoadRoomWithPlayerInfoById(roomId)
       .then((res) => {
@@ -45,15 +67,83 @@ const Room = (props) => {
         } else if (auth.authenState.userInfo._id === res.data.oCurrentPlayer) {
           setIsCurrPlayer("O");
         }
+
+        //load game info if room is playing
+        if (res.data.isPlaying) {
+          apiLoadLatestGameInRoomById(roomId)
+            .then((resGame) => {
+              setHistory(resGame.data.game.history);
+              setStepNumber(resGame.data.stepNumber);
+              setXIsNext(resGame.data.xIsNext);
+              setGameStt(
+                resGame.data.stepNumber === 0
+                  ? "Bắt đầu X"
+                  : `Lượt kế tiếp ${resGame.data.xIsNext ? "X" : "O"}`
+              );
+              setLatestLocation(resGame.data.latestLocation);
+              setGame(resGame.data.game);
+            })
+            .catch((err) => console.log(err));
+        }
       })
       .catch((err) => console.log(err));
   }, []);
 
+  useEffect(() => {
+    if (latestLocation) {
+      const historyArr = history.slice(0, stepNumber + 1);
+      const current = historyArr[historyArr.length - 1];
+      const squares = current.squares.slice();
+
+      squares[latestLocation] = xIsNext ? "X" : "O";
+
+      const checkedResult = calculateWinner(squares, latestLocation);
+      console.log(checkedResult);
+      const { winner, line, draw } = checkedResult;
+      if (winner) {
+        setGameStt(`${winner} thắng`);
+        setIsClickable(false);
+        setWinningLine(line);
+        // if (winner === `X`) {
+        //   setGoal({
+        //     ...goal,
+        //     xPoints: goal.xPoints + 1,
+        //   });
+        // } else {
+        //   setGoal({
+        //     ...goal,
+        //     oPoints: goal.oPoints + 1,
+        //   });
+        // }
+      } else {
+        if (draw) {
+          setGameStt(`Hoà`);
+          setIsClickable(false);
+        } else {
+          setGameStt(`Lượt kế tiếp ${xIsNext ? "O" : "X"}`);
+        }
+      }
+
+      setHistory(
+        historyArr.concat([
+          {
+            squares: squares,
+            location: latestLocation,
+          },
+        ])
+      );
+      setStepNumber(historyArr.length);
+      setXIsNext(!xIsNext);
+    }
+  }, [latestLocation]);
+
   const renderReadyStatus = (player, status) => {
-    if (player === "X") {
-      return status ? <div>READY</div> : null;
-    } else if (player === "O") {
-      return status ? <div>READY</div> : null;
+    if (!roomInfo.isPlaying) {
+      if (player === "X") {
+        return status ? <div>READY</div> : null;
+      } else if (player === "O") {
+        return status ? <div>READY</div> : null;
+      }
     }
   };
 
@@ -97,29 +187,82 @@ const Room = (props) => {
       const sendData = {
         roomId: roomId,
         player: isCurrPlayer,
-        status:
-          isCurrPlayer === "X"
-            ? !roomInfo.xPlayerReady
-            : !roomInfo.oPlayerReady,
+        xPlayerReady:
+          isCurrPlayer === "X" ? !roomInfo.xPlayerReady : roomInfo.xPlayerReady,
+        oPlayerReady:
+          isCurrPlayer === "O" ? !roomInfo.oPlayerReady : roomInfo.oPlayerReady,
+        xCurrentPlayer: roomInfo.xCurrentPlayer,
+        oCurrentPlayer: roomInfo.oCurrentPlayer,
+
+        // status:
+        //   isCurrPlayer === "X"
+        //     ? !roomInfo.xPlayerReady
+        //     : !roomInfo.oPlayerReady,
+        // otherPlayerStatus:
+        //   isCurrPlayer === "X" ? roomInfo.oPlayerReady : roomInfo.xPlayerReady,
       };
-      console.log(sendData)
-      socket.emit(UPDATE_READY_STATUS, sendData)
+      console.log(sendData);
+      socket.emit(UPDATE_READY_STATUS, sendData);
     }
   };
 
-  socket.on(UPDATE_READY_STATUS, data => {
+  socket.on(UPDATE_READY_STATUS, (data) => {
     if (data.player === "X") {
       setRoomInfo({
         ...roomInfo,
-        xPlayerReady: data.status
+        xPlayerReady: data.xPlayerReady,
       });
-    } else if (data.player === 'O') {
+    } else if (data.player === "O") {
       setRoomInfo({
         ...roomInfo,
-        oPlayerReady: data.status
+        oPlayerReady: data.oPlayerReady,
       });
     }
-  })
+  });
+
+  socket.on(START_GAME, (game) => {
+    setRoomInfo({
+      ...roomInfo,
+      oPlayerReady: false,
+      xPlayerReady: false,
+      isPlaying: true,
+    });
+    setGame(game);
+    setGameStt("Bắt đầu X");
+  });
+
+  const handleClickBoard = (i) => {
+    if (!isClickable) {
+      setGameStt("Đã có người thắng cuộc, vui lòng chọn ván chơi mới");
+      return;
+    }
+
+    const historyArr = history.slice(0, stepNumber + 1);
+    const current = historyArr[historyArr.length - 1];
+    const squares = current.squares.slice();
+
+    if (
+      squares[i] |
+      (xIsNext & (isCurrPlayer === "O")) |
+      (!xIsNext & (isCurrPlayer === "X"))
+    ) {
+      return;
+    }
+    console.log("req");
+    socket.emit(REQUEST_MOVE, {
+      roomId: roomId,
+      // userId: auth.authenState.userInfo._id,
+      xIsNext: xIsNext,
+      location: i,
+      player: isCurrPlayer,
+    });
+  };
+
+  socket.on(ACCEPT_MOVE, (data) => {
+    setLatestLocation(data.location);
+  });
+
+  // const current = history[stepNumber];
 
   return isLoading ? (
     <CircularProgress />
@@ -142,22 +285,31 @@ const Room = (props) => {
         <Grid item xs={6}>
           <Grid container className={classes.paper}>
             <Grid item xs={12}>
-              {/* {gameStt} */}
+              {gameStt}
             </Grid>
           </Grid>
           <Grid container className={classes.paper}>
             <Grid item xs={12}>
               <Box display="flex" justifyContent="center">
+                {game ? (
+                  <Board
+                    squares={history[stepNumber].squares}
+                    onClick={(i) => handleClickBoard(i)}
+                    currSquare={history[stepNumber].location}
+                    winningLine={winningLine}
+                  />
+                ) : null}
+
                 {/* <Board
                   squares={current.squares}
-                  onClick={(i) => handleClick(i)}
+                  onClick={(i) => handleClickBoard(i)}
                   currSquare={current.location}
                   winningLine={winningLine}
                 /> */}
               </Box>
             </Grid>
           </Grid>
-          {isCurrPlayer ? (
+          {!roomInfo.isPlaying && isCurrPlayer ? (
             <Grid container className={classes.paper} justify="center">
               <Grid item xs={6}>
                 <Button
@@ -178,11 +330,12 @@ const Room = (props) => {
                 color="secondary"
                 // onClick={handleGiveIn}
               >
-                Give up
+                Give in
               </Button>
             </Grid>
           </Grid>
         </Grid>
+
         <Grid item xs={5} spacing={3}>
           <Grid item xs={12}>
             <Grid container justify="space-around" className={classes.paper}>
