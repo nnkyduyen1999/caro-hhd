@@ -10,7 +10,7 @@ import IconButton from "@material-ui/core/IconButton";
 import InputBase from "@material-ui/core/InputBase";
 import List from "@material-ui/core/List";
 
-const Chat = ({id}) => {
+const Chat = ({id, disableSend}) => {
     const classes = useStyles();
     const {messages, sendMessage} = useChat(id); // Creates a websocket and manages messaging
     const [newMessage, setNewMessage] = React.useState(""); // Message to be sent
@@ -33,7 +33,7 @@ const Chat = ({id}) => {
     };
 
     const handleKeyDown = (event) => {
-        if(event.key === 'Enter') {
+        if (event.key === 'Enter') {
             handleSendMessage();
         }
     };
@@ -44,10 +44,12 @@ const Chat = ({id}) => {
             <Grid item md={12}>
                 <List className={classes.conversationContainer} id={'bottom'}>
                     {messages.map((message, i) => (
-                        <ChatItem key={i} message={message.body} isOwn={message.ownedByCurrentUser} senderName={message.senderName}/>
+                        <ChatItem key={i} message={message.body} isOwn={message.ownedByCurrentUser}
+                                  senderName={message.senderName}/>
                     ))}
                 </List>
             </Grid>
+            {!disableSend &&
             <Grid item md={12}>
                 <Paper className={classes.inputContainer}>
                     <InputBase
@@ -62,6 +64,7 @@ const Chat = ({id}) => {
                     </IconButton>
                 </Paper>
             </Grid>
+            }
         </Grid>
     );
 };
@@ -69,6 +72,7 @@ const Chat = ({id}) => {
 const useStyles = makeStyles(theme => ({
     container: {
         flex: 1,
+        width: '360',
         border: "0.5px solid",
     },
     inputContainer: {
@@ -87,11 +91,8 @@ const useStyles = makeStyles(theme => ({
     conversationContainer: {
         height: 300,
         width: '100%',
-        maxWidth: 360,
-        // backgroundColor: theme.palette.background.paper,
         position: 'relative',
         overflowY: 'auto',
-        maxHeight: 300,
     },
 
 }));

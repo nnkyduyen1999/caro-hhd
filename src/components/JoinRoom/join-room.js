@@ -1,8 +1,6 @@
-import React, {useContext, useState} from "react";
+import React, {useState} from "react";
 import {Button, Grid, Paper, Typography} from "@material-ui/core";
-import {Redirect} from "react-router-dom";
 import {useHistory} from "react-router-dom";
-import socket from "../../socket.io/socket.io";
 import InputBase from "@material-ui/core/InputBase";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {apiGetRoomById} from "../../service/room-service";
