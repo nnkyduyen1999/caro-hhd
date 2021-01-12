@@ -10,3 +10,11 @@ export const apiGetOnlineUsers = () => {
     })
 }
 
+export const apiGetTopPlayers = () => {
+    return axios.get(`/user/top-players`, {
+        headers: {
+            "Authorization": `Bearer ${localStorage.getItem('token')}`
+        }
+    });
+}
+
