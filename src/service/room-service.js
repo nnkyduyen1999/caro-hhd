@@ -17,3 +17,11 @@ export const apiGetRoomById = (id) => {
     }
   });
 };
+
+export const apiLoadRoomWithPlayerInfoById = (id) => {
+  return axios.get(`/room/with-player-info/${id}`);
+};
+
+export const apiLoadLatestGameInRoomById = (id) => {
+  return axios.get(`/room/${id}/latest-game`);
+};

@@ -88,7 +88,7 @@ const Home = (props) => {
               </Grid>
             </Grid>
             <Grid>
-              <ListRoom data={rooms} />
+              <ListRoom data={rooms} setData={setRooms}/>
             </Grid>
           </Grid>
         </Grid>

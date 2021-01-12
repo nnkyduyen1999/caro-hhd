@@ -23,3 +23,11 @@ export const CREATE_ROOM = "createRoom";
 export const NEW_ROOM_CREATED = "newRoomCreated";
 
 export const IN_WAITING = "inWaiting";
+
+export const BECOME_PLAYER = "becomePlayer";
+
+export const UPDATE_CURRENT_PLAYER = "updateCurrentPlayer";
+
+export const UPDATE_READY_STATUS = "updateReadyStatus";
+
+export const START_GAME = "startGame";

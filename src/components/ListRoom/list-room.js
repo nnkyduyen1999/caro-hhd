@@ -10,7 +10,12 @@ import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import LockIcon from "@material-ui/icons/Lock";
 import PasswordModal from "../Modal/password-modal";
-import {useHistory} from 'react-router-dom'
+import { useHistory } from "react-router-dom";
+import socket from "../../socket.io/socket.io";
+import {
+  START_GAME,
+  UPDATE_CURRENT_PLAYER,
+} from "../../socket.io/socket-event";
 const columns = [
   { id: "lock" },
   { id: "id", label: "ID" },
@@ -69,13 +74,18 @@ const useStyles = makeStyles((theme) => ({
 
 const ListRoom = (props) => {
   const classes = useStyles();
-  const [rows, setRows] = useState([]);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [roomId, setRoomId] = useState('');
-  const [roomPass, setRoomPass] = useState('');
+  console.log(props.data);
+  // const [rows, setRows] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [roomId, setRoomId] = useState("");
+  const [roomPass, setRoomPass] = useState("");
   const [open, setOpen] = useState(false);
   const history = useHistory();
+
+  // setRows(props.data)
+
+  // console.log('row', rows)
 
   const mapDataToRow = (data) => {
     return data.map(function (item) {
@@ -91,14 +101,31 @@ const ListRoom = (props) => {
         xPlayer: item.xPlayerUsername,
         oPlayer: item.oPlayerUsername,
         status: status,
-        password: item.password
+        password: item.password,
       };
     });
   };
 
-  //   useEffect(() => {
-  //     loadAllRoom();
-  //   }, []);
+  socket.on(UPDATE_CURRENT_PLAYER, (data) => {
+    const index = props.data.findIndex((item) => item._id === data.roomId);
+    if (index !== -1) {
+      let temp = [...props.data];
+      temp[index][data.player === "X" ? "xPlayerUsername" : "oPlayerUsername"] =
+        data.user.username;
+      temp[index][data.player === "X" ? "xCurrentPlayer" : "oCurrentPlayer"] =
+        data.user._id;
+      props.setData(temp);
+    }
+  });
+
+  socket.on(START_GAME, (roomId) => {
+    const index = props.data.findIndex((item) => item._id === roomId);
+    if (index !== -1) {
+      let temp = [...props.data];
+      temp[index]["isPlaying"] = true;
+      props.setData(temp);
+    }
+  });
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -110,11 +137,11 @@ const ListRoom = (props) => {
   };
 
   const handleOpen = () => {
-      setOpen(true);
+    setOpen(true);
   };
 
   const handleClose = () => {
-      setOpen(false);
+    setOpen(false);
   };
 
   return (
@@ -144,16 +171,18 @@ const ListRoom = (props) => {
               .map((row) => {
                 // console.log(row);
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code}
-                            onClick={() => {
-                              if(row.password) {
-                                setRoomId(row.id);
-                                setRoomPass(row.password);
-                                handleOpen();
-                              }
-                              else
-                                history.push(`/room/${row.id}`)
-                            }}
+                  <TableRow
+                    hover
+                    role="checkbox"
+                    tabIndex={-1}
+                    key={row.code}
+                    onClick={() => {
+                      if (row.password) {
+                        setRoomId(row.id);
+                        setRoomPass(row.password);
+                        handleOpen();
+                      } else history.push(`/room/${row.id}`);
+                    }}
                   >
                     {columns.map((column) => {
                       const value = row[column.id];
@@ -174,13 +203,19 @@ const ListRoom = (props) => {
       <TablePagination
         rowsPerPageOptions={[10, 25, 100]}
         component="div"
-        count={rows.length}
+        count={props.data.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
       />
-      <PasswordModal roomId={roomId} roomPass={roomPass} open={open} handleOpen={handleOpen} handleClose={handleClose}/>
+      <PasswordModal
+        roomId={roomId}
+        roomPass={roomPass}
+        open={open}
+        handleOpen={handleOpen}
+        handleClose={handleClose}
+      />
     </Paper>
     //       </div>
     //     </div>
