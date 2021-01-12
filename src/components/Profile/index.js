@@ -1,9 +1,10 @@
-import React from "react";
+import React, {useContext} from "react";
 import { Container, Grid, makeStyles } from "@material-ui/core";
 import Page from "../commons/Page";
 import Profile from "./Profile";
 import ProfileDetails from "./ProfileDetail";
 import Header from "../Header/header";
+import {AuthenticationContext} from "../../providers/authenticationProvider";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Account = () => {
   const classes = useStyles();
+  const {userInfo} = useContext(AuthenticationContext).authenState;
 
   return (
     <>
@@ -26,10 +28,10 @@ const Account = () => {
         <Container maxWidth="lg">
           <Grid container spacing={3}>
             <Grid item lg={4} md={6} xs={12}>
-              <Profile />
+              <Profile info={userInfo}/>
             </Grid>
             <Grid item lg={8} md={6} xs={12}>
-              <ProfileDetails />
+              <ProfileDetails info={userInfo}/>
             </Grid>
           </Grid>
         </Container>

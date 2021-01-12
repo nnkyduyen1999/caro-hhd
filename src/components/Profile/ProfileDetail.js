@@ -32,7 +32,7 @@ const useStyles = makeStyles(() => ({
   root: {},
 }));
 
-const ProfileDetail = ({ className, ...rest }) => {
+const ProfileDetail = ({ className, info, ...rest }) => {
   const classes = useStyles();
   const [values, setValues] = useState({
     firstName: "Katarina",
@@ -49,6 +49,13 @@ const ProfileDetail = ({ className, ...rest }) => {
       [event.target.name]: event.target.value,
     });
   };
+
+  const countRatio = (win, total) => {
+    if (total !== 0) {
+        return win / total;
+    }
+    return 0;
+  }
 
   return (
     <form
@@ -69,7 +76,7 @@ const ProfileDetail = ({ className, ...rest }) => {
                 label="First name"
                 name="firstName"
                 onChange={handleChange}
-                value={values.firstName}
+                value={info.firstName}
               />
             </Grid>
             <Grid item md={6} xs={12}>
@@ -78,7 +85,7 @@ const ProfileDetail = ({ className, ...rest }) => {
                 label="Last name"
                 name="lastName"
                 onChange={handleChange}
-                value={values.lastName}
+                value={info.lastName}
               />
             </Grid>
             <Grid item md={6} xs={12}>
@@ -87,7 +94,7 @@ const ProfileDetail = ({ className, ...rest }) => {
                 label="Email Address"
                 name="email"
                 onChange={handleChange}
-                value={values.email}
+                value={info.email}
               />
             </Grid>
 
@@ -99,7 +106,7 @@ const ProfileDetail = ({ className, ...rest }) => {
                     label="Match"
                     name="total"
                     onChange={handleChange}
-                    value="89"
+                    value={info.total}
                   />
                 </Grid>
                 <Grid item md={4} xs={12}>
@@ -108,7 +115,7 @@ const ProfileDetail = ({ className, ...rest }) => {
                     label="Winning ratio"
                     name="ratio"
                     onChange={handleChange}
-                    value={values.country}
+                    value={countRatio(info.winCount, info.total)}
                   />
                 </Grid>
                 <Grid item md={4} xs={12}>
@@ -117,7 +124,7 @@ const ProfileDetail = ({ className, ...rest }) => {
                     label="Trophies"
                     name="trophy"
                     onChange={handleChange}
-                    value={values.country}
+                    value={info.trophy}
                   />
                 </Grid>
               </Grid>

@@ -13,6 +13,7 @@ import Avatar from "@material-ui/core/Avatar";
 import Divider from "@material-ui/core/Divider";
 import { AuthenticationContext } from "../../providers/authenticationProvider";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import {useHistory} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   "@global": {
@@ -49,6 +50,8 @@ export default function Header({ homeActive, topPlayerActive, historyActive }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const history = useHistory();
+
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -135,11 +138,8 @@ export default function Header({ homeActive, topPlayerActive, historyActive }) {
                 horizontal: "right",
               }}
               open={open}
-              onClose={handleClose}
             >
-              <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleClose}>My account</MenuItem>
-              <Divider></Divider>
+              <MenuItem onClick={() => history.push(`/profile/${authenState.userInfo._id}`)}>Profile</MenuItem>
               <MenuItem onClick={logout} leftIcon={<ExitToAppIcon />}>
                 Sign out
               </MenuItem>

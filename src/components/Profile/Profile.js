@@ -17,10 +17,6 @@ import {
 const user = {
   avatar:
     "https://images-na.ssl-images-amazon.com/images/I/71FcdrSeKlL._AC_SL1001_.jpg",
-  city: "Los Angeles",
-  country: "USA",
-  jobTitle: "Senior Developer",
-  name: "Katarina Smith",
   timezone: "GTM-7",
 };
 
@@ -32,26 +28,26 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Profile = ({ className, ...rest }) => {
+const Profile = ({ className, info, ...rest }) => {
   const classes = useStyles();
-
+    const time = new Date(info.createTime);
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
       <CardContent>
         <Box alignItems="center" display="flex" flexDirection="column">
           <Avatar className={classes.avatar} src={user.avatar} />
           <Typography color="textPrimary" gutterBottom variant="h3">
-            {user.name}
+            {info.username}
           </Typography>
           <Typography color="textSecondary" variant="body1">
-            {`${user.city} ${user.country}`}
+            {`${info.winCount} win - ${info.loseCount} lose`}
           </Typography>
           <Typography
             className={classes.dateText}
             color="textSecondary"
             variant="body1"
           >
-            {`${moment().format("hh:mm A")} ${user.timezone}`}
+            {`${time.toUTCString()}`}
           </Typography>
         </Box>
       </CardContent>
