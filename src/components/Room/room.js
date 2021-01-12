@@ -27,6 +27,7 @@ import {
   START_GAME,
   UPDATE_CURRENT_PLAYER,
   UPDATE_READY_STATUS,
+  SAVE_RESULT
 } from "../../socket.io/socket-event";
 import Board from "../Board/board";
 import { BOARD_SIZE } from "../../global/constant";
@@ -154,25 +155,35 @@ const Room = (props) => {
       history.location = data.newHistory.location;
       history.xTurn = data.newHistory.xTurn;
 
-      checkWinner(history.squares, history.location, history.xTurn);
+      checkWinner(history.squares, history.location, history.xTurn, {...game});
 
     });
   }, [game]);
 
-  const checkWinner = (squares, location, xTurn) => {
+  const checkWinner = (squares, location, xTurn, game) => {
     const checkedResult = calculateWinner(squares, location);
-    console.log(checkedResult);
     const { winner, line, draw } = checkedResult;
+    console.log("id", game);
     if (winner) {
       setGameStt(`${winner} thắng`);
       setIsClickable(false);
       setWinningLine(line);
+      socket.emit(SAVE_RESULT, {
+        gameId: game._id,
+        winningLine: line,
+        isFinish: true,
+        winner: winner
+      });
     } else {
       if (draw) {
         setGameStt(`Hoà`);
         setIsClickable(false);
+        socket.emit(SAVE_RESULT, {
+          gameId: game._id,
+          isFinish: true,
+          winner: "none"
+        });
       } else {
-        console.log("aaaaa");
         setCurrent({ squares: squares, location: location, xTurn: xTurn });
         setGameStt(`Lượt kế tiếp ${!xTurn ? "O" : "X"}`);
       }
@@ -229,6 +240,7 @@ const Room = (props) => {
     });
     setGameStt("Bắt đầu X");
     setGame(game);
+    console.log("start", game);
   });
 
   socket.on(GIVEN_IN_EVENT, (data) => {
