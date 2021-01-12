@@ -19,6 +19,7 @@ import {
 import Board from "../Board/board";
 import {BOARD_SIZE} from "../../global/constant";
 import {calculateWinner} from "../../service/calculateWinner";
+import Chat from "../Chat/chat";
 
 const Room = (props) => {
     const classes = useStyles();
@@ -395,7 +396,9 @@ const Room = (props) => {
                     </Grid>
                     <Grid container justify="center">
                         <Grid item xs={8}>
-                            {/* <Chat id={roomId} /> */}
+                            {
+                                game && <Chat id={roomId} />
+                            }
                         </Grid>
                     </Grid>
                 </Grid>
