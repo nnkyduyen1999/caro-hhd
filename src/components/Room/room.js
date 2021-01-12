@@ -1,36 +1,24 @@
-import { CircularProgress } from "@material-ui/core";
-import {
-  Grid,
-  Paper,
-  Container,
-  Box,
-  Avatar,
-  Button,
-  IconButton,
-} from "@material-ui/core";
-import { useStyles } from "./useStyle";
-import React, { useState, useEffect, useContext } from "react";
-import { useParams } from "react-router-dom";
-import { AuthenticationContext } from "../../providers/authenticationProvider";
-import {
-  apiLoadRoomWithPlayerInfoById,
-  apiLoadLatestGameInRoomById,
-} from "../../service/room-service";
+import {Avatar, Box, Button, CircularProgress, Container, Grid, IconButton} from "@material-ui/core";
+import {useStyles} from "./useStyle";
+import React, {useContext, useEffect, useState} from "react";
+import {useParams} from "react-router-dom";
+import {AuthenticationContext} from "../../providers/authenticationProvider";
+import {apiLoadLatestGameInRoomById, apiLoadRoomWithPlayerInfoById,} from "../../service/room-service";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import BecomePlayerBtn from "./BecomePlayerBtn/become-player-btn";
 import socket from "../../socket.io/socket.io";
 import {
-  BECOME_PLAYER,
-  UPDATE_CURRENT_PLAYER,
-  JOIN_ROOM,
-  UPDATE_READY_STATUS,
-  START_GAME,
-  REQUEST_MOVE,
   ACCEPT_MOVE,
+  BECOME_PLAYER,
+  JOIN_ROOM,
+  REQUEST_MOVE,
+  START_GAME,
+  UPDATE_CURRENT_PLAYER,
+  UPDATE_READY_STATUS,
 } from "../../socket.io/socket-event";
 import Board from "../Board/board";
-import { BOARD_SIZE } from "../../global/constant";
-import { calculateWinner } from "../../service/calculateWinner";
+import {BOARD_SIZE} from "../../global/constant";
+import {calculateWinner} from "../../service/calculateWinner";
 
 const Room = (props) => {
   const classes = useStyles();
@@ -179,7 +167,7 @@ const Room = (props) => {
       xPlayerReady: false,
       isPlaying: true,
     });
-    
+
     setXIsNext(true);
     setCurrent({
       squares: Array(BOARD_SIZE * BOARD_SIZE).fill(null),

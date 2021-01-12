@@ -9,7 +9,6 @@ import PublicRoute from "./router/public-router";
 import PrivateRoute from "./router/private-router";
 import {AuthenticationProvider} from "./providers/authenticationProvider";
 import Home from "./components/Home/home";
-import RoomList from "./components/RoomList/room-list";
 import TopPlayers from "./components/TopPlayers/topPlayers";
 import History from "./components/History/history";
 import Activate from "./components/Activate/activate";
@@ -34,7 +33,6 @@ function App() {
             </Route>
             <PublicRoute restricted={true} component={Login} path="/login" exact/>
             <PublicRoute component={Signup} path="/signup" exact/>
-            <PublicRoute component={RoomList} path="/room" exact/>
             <PublicRoute component={Activate} path="/user/activate/:token" exact/>
             <PublicRoute component={ForgetPassword} path="/user/forget-password" exact/>
             <PublicRoute component={ResetPassword} path="/user/reset-password/:token" exact/>
