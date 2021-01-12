@@ -94,7 +94,7 @@ const ListRoom = (props) => {
         : item.xCurrentPlayer && item.oCurrentPlayer
         ? "Đang chờ"
         : "Đang đợi thêm người chơi";
-      const lock = item.password === "" ? "" : <LockIcon fontSize="small" />;
+      const lock = item.password ? <LockIcon fontSize="small" /> : "";
       return {
         lock: lock,
         id: item._id,
@@ -217,10 +217,6 @@ const ListRoom = (props) => {
         handleClose={handleClose}
       />
     </Paper>
-    //       </div>
-    //     </div>
-    //   </div>
-    // </div>
   );
 };
 

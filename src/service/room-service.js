@@ -19,9 +19,17 @@ export const apiGetRoomById = (id) => {
 };
 
 export const apiLoadRoomWithPlayerInfoById = (id) => {
-  return axios.get(`/room/with-player-info/${id}`);
+  return axios.get(`/room/with-player-info/${id}`, {
+    headers: {
+      "Authorization": `Bearer ${localStorage.getItem('token')}`
+    }
+  });
 };
 
 export const apiLoadLatestGameInRoomById = (id) => {
-  return axios.get(`/room/${id}/latest-game`);
+  return axios.get(`/room/${id}/latest-game`, {
+    headers: {
+      "Authorization": `Bearer ${localStorage.getItem('token')}`
+    }
+  });
 };

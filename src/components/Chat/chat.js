@@ -54,7 +54,7 @@ const Chat = ({id, disableSend}) => {
                 <Paper className={classes.inputContainer}>
                     <InputBase
                         className={classes.input}
-                        placeholder="nhập..."
+                        placeholder="Input message..."
                         onChange={handleNewMessageChange}
                         value={newMessage}
                         onKeyDown={handleKeyDown}
