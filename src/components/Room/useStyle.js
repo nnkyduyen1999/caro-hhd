@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
   },
   userName: {
-    marginVertical: theme.spacing(2),
+    marginTop: theme.spacing(2),
     textAlign: "center",
   },
   large: {
