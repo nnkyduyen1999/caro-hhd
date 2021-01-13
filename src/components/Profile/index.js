@@ -55,14 +55,6 @@ const Account = ({ match }) => {
               <ProfileDetails info={userInfo} />
             </Grid>
           </Grid>
-          <Grid container spacing={3}>
-            <Grid item lg={4} md={6} xs={12}>
-              {/* <Profile info={userInfo}/> */}
-            </Grid>
-            <Grid item lg={8} md={6} xs={12}>
-              <FinishedGames match={match} />
-            </Grid>
-          </Grid>
         </Container>
       </Page>
     </>
