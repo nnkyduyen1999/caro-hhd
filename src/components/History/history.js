@@ -3,6 +3,7 @@ import * as React from "react";
 import { DataGrid } from "@material-ui/data-grid";
 import { apiGetFinishedGamesById } from "../../service/user-service";
 import { AuthenticationContext } from "../../providers/authenticationProvider";
+import moment from 'moment'
 
 const columns = [
   { field: "id", headerName: "ID", width: 90 },
@@ -29,13 +30,14 @@ const History = () => {
     apiGetFinishedGamesById(authenState.userInfo._id)
       .then((res) => {
         if (res.status === 200) {
+          console.log(res.data)
           setListGame(
             res.data.map((game, index) => ({
-              id: index,
+              id: game.id,
               xPlayer: game.xUsername,
               oPlayer: game.oUsername,
               winner: game.winner,
-              time: new Date(game.time).toDateString(),
+              time: moment(game.time).format('DD/MM/YY HH:MM:SS'),
             }))
           );
         } else {
