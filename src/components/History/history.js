@@ -3,11 +3,11 @@ import * as React from "react";
 import { DataGrid } from "@material-ui/data-grid";
 import { apiGetFinishedGamesById } from "../../service/user-service";
 import { AuthenticationContext } from "../../providers/authenticationProvider";
-import moment from 'moment'
+import moment from "moment";
 import { useHistory } from "react-router-dom";
 
 const columns = [
-  { field: "ord", headerName: "Ordinary", width: 90 },
+  { field: "ord", headerName: "Ordinary", width: 120, align: "center" },
   { field: "xPlayer", headerName: "Player X", width: 150 },
   { field: "oPlayer", headerName: "Player O", width: 150 },
   {
@@ -25,13 +25,13 @@ const columns = [
 const History = () => {
   const [listGame, setListGame] = React.useState([]);
   const { authenState } = React.useContext(AuthenticationContext);
-  const history = useHistory()
+  const history = useHistory();
 
   React.useEffect(() => {
     apiGetFinishedGamesById(authenState.userInfo._id)
       .then((res) => {
         if (res.status === 200) {
-          console.log(res.data)
+          console.log(res.data);
           setListGame(
             res.data.map((game, index) => ({
               id: game.id,
@@ -39,7 +39,7 @@ const History = () => {
               xPlayer: game.xUsername,
               oPlayer: game.oUsername,
               winner: game.winner,
-              time: moment(game.time).format('DD/MM/YY HH:MM:SS'),
+              time: moment(game.time).format("DD/MM/YY HH:MM:SS"),
             }))
           );
         } else {
@@ -53,8 +53,13 @@ const History = () => {
 
   return (
     <div style={{ height: 400, width: "100%" }}>
-        <Header homeActive={true} />
-      <DataGrid rows={listGame} columns={columns} pageSize={5} onCellClick={(cell) => history.push(`/history/${cell.row.id}`)}/>
+      <Header historyActive={true} />
+      <DataGrid
+        rows={listGame}
+        columns={columns}
+        pageSize={5}
+        onCellClick={(cell) => history.push(`/history/${cell.row.id}`)}
+      />
     </div>
   );
 };
