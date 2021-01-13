@@ -3,38 +3,21 @@ import { DataGrid } from "@material-ui/data-grid";
 import { apiGetFinishedGamesById } from "../../service/user-service";
 
 const columns = [
-  { field: "id", headerName: "ID", width: 70 },
-  { field: "firstName", headerName: "First name", width: 130 },
-  { field: "lastName", headerName: "Last name", width: 130 },
+  { field: "id", headerName: "ID", width: 90 },
+  { field: "xPlayer", headerName: "Player X", width: 150 },
+  { field: "oPlayer", headerName: "Player O", width: 150 },
   {
-    field: "age",
-    headerName: "Age",
-    type: "number",
-    width: 90,
+    field: "winner",
+    headerName: "Winner",
+    width: 100,
+    align: "center",
   },
   {
-    field: "fullName",
-    headerName: "Full name",
-    description: "This column has a value getter and is not sortable.",
-    sortable: false,
-    width: 160,
-    valueGetter: (params) =>
-      `${params.getValue("firstName") || ""} ${
-        params.getValue("lastName") || ""
-      }`,
+    field: "time",
+    headerName: "Time",
+    width: 150,
+    align: "center",
   },
-];
-
-const rows = [
-  { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
-  { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
-  { id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
-  { id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
-  { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-  { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-  { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-  { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-  { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
 ];
 
 export default function DataTable({ match }) {
@@ -44,8 +27,16 @@ export default function DataTable({ match }) {
     apiGetFinishedGamesById(match.params.id)
       .then((res) => {
         if (res.status === 200) {
-          setListGame(res.data);
-          console.log("list games finished",res.data);
+          setListGame(
+            res.data.map((game, index) => ({
+              id: index,
+              xPlayer: game.xUsername,
+              oPlayer: game.oUsername,
+              winner: game.winner,
+              time: new Date(game.time).toDateString()
+            }))
+          );
+         // console.log("list games finished", res.data);
         } else {
           console.log("Err");
         }
@@ -57,7 +48,7 @@ export default function DataTable({ match }) {
 
   return (
     <div style={{ height: 400, width: "100%" }}>
-      <DataGrid rows={rows} columns={columns} pageSize={5} />
+      <DataGrid rows={listGame} columns={columns} pageSize={5} />
     </div>
   );
 }
