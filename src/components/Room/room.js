@@ -94,7 +94,7 @@ const Room = (props) => {
                                 history.squares[item.location] = item.player;
                             }
 
-                            if(resGame.data.history.length === 0) {
+                            if (resGame.data.history.length === 0) {
                                 history.location = null;
                                 setMessages([])
                             } else {
@@ -163,11 +163,7 @@ const Room = (props) => {
                 // console.log(data);
                 const newRoomInfo = {...data};
                 delete newRoomInfo.player;
-                if (data.player === "X") {
-                    setRoomInfo(newRoomInfo);
-                } else if (data.player === "O") {
-                    setRoomInfo(newRoomInfo);
-                }
+                setRoomInfo(newRoomInfo);
             });
         }
     }, [roomInfo?._id]);
@@ -220,23 +216,13 @@ const Room = (props) => {
             setIsClickable(true);
             console.log("start", game);
         });
-    }, [game])
+    }, [roomId])
 
     useEffect(() => {
         socket.on(GIVEN_IN_EVENT, (data) => {
             setIsClickable(false);
             setRoomInfo({...roomInfo, isPlaying: false})
-            if (isCurrPlayer === data.winner) {
-                setGameStt(`Bạn đã thắng do đối thủ xin thua`);
-                // console.log("calling", isCurrPlayer, winner);
-                socket.emit(SAVE_RESULT, {
-                    gameId: game._id,
-                    winner: data.winner,
-                    xPlayer: game.xPlayer,
-                    oPlayer: game.oPlayer,
-                    roomId: game.roomId
-                });
-            } else setGameStt(`Bạn đã xin thua`);
+            setGameStt(`${data.winner} thắng do đối thủ xin thua`);
         });
     }, [game])
 
@@ -327,7 +313,7 @@ const Room = (props) => {
 
         socket.emit(GIVEN_IN_EVENT, {
             winner: isCurrPlayer === "X" ? "O" : "X",
-            roomId,
+            game,
         });
     };
 
