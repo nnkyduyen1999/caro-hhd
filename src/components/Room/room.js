@@ -172,45 +172,49 @@ const Room = (props) => {
     });
   }, [game]);
 
-  // useEffect(() => {
-
-  // }, [])
+  useEffect(() => {
+    if (game) {
+      socket.on(SAVE_USER_SUCCESS, (data) => {
+        //console.log(data);
+        if (data.winner === `X`){
+          setXTrophy(data.updatedWinner);
+        setOTrophy(data.updatedLoser);
+        } else if (data.winner === `O`) {
+          setOTrophy(data.updatedWinner);
+          setXTrophy(data.updatedLoser);
+        }
+        
+      });
+    }
+  }, [game]);
 
   const checkWinner = (squares, location, xTurn, game) => {
     const checkedResult = calculateWinner(squares, location);
     const { winner, line, draw } = checkedResult;
-    const bonus = 10;
     console.log(game);
     if (winner) {
       setGameStt(`${winner} thắng`);
       setIsClickable(false);
       setWinningLine(line);
-      socket.emit(SAVE_RESULT, {
-        gameId: game._id,
-        winningLine: line,
-        isFinish: true,
-        winner: winner,
-        bonusTrophy: bonus,
-        xPlayer: game.xPlayer,
-        oPlayer: game.oPlayer,
-      });
-      socket.on(SAVE_USER_SUCCESS, (data) => {
-        //console.log(data);
-        if (winner === `X`) {
-          setXTrophy(data.updatedTrophy);
-        } else if (winner === `O`) {
-          setOTrophy(data.updatedTrophy);
-          console.log("o after:", oTrophy);
-        }
-      });
+      if (isCurrPlayer === winner) {
+        console.log("calling", isCurrPlayer, winner);
+        socket.emit(SAVE_RESULT, {
+          gameId: game._id,
+          winningLine: line,
+          winner: winner,
+          xPlayer: game.xPlayer,
+          oPlayer: game.oPlayer,
+          roomId: game.roomId
+        });
+      }
     } else {
       if (draw) {
         setGameStt(`Hoà`);
         setIsClickable(false);
         socket.emit(SAVE_RESULT, {
           gameId: game._id,
-          isFinish: true,
           winner: "none",
+          roomId: game.roomId
         });
       } else {
         setCurrent({ squares: squares, location: location, xTurn: xTurn });
