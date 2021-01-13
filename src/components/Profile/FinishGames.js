@@ -1,8 +1,6 @@
-import Header from "../Header/header";
 import * as React from "react";
 import { DataGrid } from "@material-ui/data-grid";
 import { apiGetFinishedGamesById } from "../../service/user-service";
-import { AuthenticationContext } from "../../providers/authenticationProvider";
 
 const columns = [
   { field: "id", headerName: "ID", width: 90 },
@@ -21,12 +19,12 @@ const columns = [
     align: "center",
   },
 ];
-const History = () => {
+
+export default function DataTable({ match }) {
   const [listGame, setListGame] = React.useState([]);
-  const { authenState } = React.useContext(AuthenticationContext);
 
   React.useEffect(() => {
-    apiGetFinishedGamesById(authenState.userInfo._id)
+    apiGetFinishedGamesById(match.params.id)
       .then((res) => {
         if (res.status === 200) {
           setListGame(
@@ -35,9 +33,10 @@ const History = () => {
               xPlayer: game.xUsername,
               oPlayer: game.oUsername,
               winner: game.winner,
-              time: new Date(game.time).toDateString(),
+              time: new Date(game.time).toDateString()
             }))
           );
+         // console.log("list games finished", res.data);
         } else {
           console.log("Err");
         }
@@ -49,10 +48,7 @@ const History = () => {
 
   return (
     <div style={{ height: 400, width: "100%" }}>
-        <Header homeActive={true} />
       <DataGrid rows={listGame} columns={columns} pageSize={5} />
     </div>
   );
-};
-
-export default History;
+}
