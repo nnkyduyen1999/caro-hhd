@@ -112,7 +112,6 @@ export default function Header({ homeActive, topPlayerActive, historyActive }) {
           </nav>
           <div>
             <Button
-              href="#"
               color="inherit"
               className={classes.link}
               startIcon={

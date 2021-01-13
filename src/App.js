@@ -41,7 +41,7 @@ function App() {
             <PrivateRoute path="/home" component={Home} />
             <PrivateRoute path="/game/:roomId" component={Game} />
             <PrivateRoute path="/room/:roomId" component={Room} />
-            <PrivateRoute path="/profile" component={Profile} />
+            <PrivateRoute path="/profile/:id" component={Profile} />
             <PrivateRoute path="/history" component={History} />
             {/*<PrivateRoute path="/chat" component={Chat} />*/}
           </Switch>

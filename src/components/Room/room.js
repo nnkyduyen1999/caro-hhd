@@ -85,9 +85,11 @@ const Room = (props) => {
               for (let item of resGame.data.history) {
                 history.squares[item.location] = item.player;
               }
-              history.location = resGame.data.history.length !== 0
-                ? resGame.data.history[resGame.data.history.length - 1].location
-                : null;
+              history.location =
+                resGame.data.history.length !== 0
+                  ? resGame.data.history[resGame.data.history.length - 1]
+                      .location
+                  : null;
               history.xTurn = resGame.data.xTurn;
 
               setGameStt(
@@ -97,7 +99,7 @@ const Room = (props) => {
               );
               setCurrent(history);
               setGame(resGame.data);
-                console.log(resGame.data)
+              console.log(resGame.data);
               setIsLoading(false);
             })
             .catch((err) => console.log(err));
@@ -175,15 +177,13 @@ const Room = (props) => {
   useEffect(() => {
     if (game) {
       socket.on(SAVE_USER_SUCCESS, (data) => {
-        //console.log(data);
-        if (data.winner === `X`){
+        if (data.winner === `X`) {
           setXTrophy(data.updatedWinner);
-        setOTrophy(data.updatedLoser);
+          setOTrophy(data.updatedLoser);
         } else if (data.winner === `O`) {
           setOTrophy(data.updatedWinner);
           setXTrophy(data.updatedLoser);
         }
-        
       });
     }
   }, [game]);
@@ -204,7 +204,7 @@ const Room = (props) => {
           winner: winner,
           xPlayer: game.xPlayer,
           oPlayer: game.oPlayer,
-          roomId: game.roomId
+          roomId: game.roomId,
         });
       }
     } else {
@@ -214,7 +214,7 @@ const Room = (props) => {
         socket.emit(SAVE_RESULT, {
           gameId: game._id,
           winner: "none",
-          roomId: game.roomId
+          roomId: game.roomId,
         });
       } else {
         setCurrent({ squares: squares, location: location, xTurn: xTurn });
