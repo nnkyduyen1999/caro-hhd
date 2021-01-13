@@ -15,6 +15,7 @@ import socket from "../../socket.io/socket.io";
 import {
   START_GAME,
   UPDATE_CURRENT_PLAYER,
+  SAVE_USER_SUCCESS
 } from "../../socket.io/socket-event";
 const columns = [
   { id: "lock" },
@@ -117,6 +118,15 @@ const ListRoom = (props) => {
       props.setData(temp);
     }
   });
+
+  socket.on(SAVE_USER_SUCCESS, (data) => {
+    const index = props.data.findIndex((item) => item._id === data.roomId);
+    if (index !== -1) {
+      let temp = [...props.data];
+      temp[index]["isPlaying"] = false;
+      props.setData(temp);
+    }
+  })
 
   socket.on(START_GAME, (roomId) => {
     const index = props.data.findIndex((item) => item._id === roomId);

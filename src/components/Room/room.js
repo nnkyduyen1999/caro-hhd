@@ -27,6 +27,8 @@ import {
   START_GAME,
   UPDATE_CURRENT_PLAYER,
   UPDATE_READY_STATUS,
+  SAVE_RESULT,
+  SAVE_USER_SUCCESS,
 } from "../../socket.io/socket-event";
 import Board from "../Board/board";
 import { BOARD_SIZE } from "../../global/constant";
@@ -41,6 +43,8 @@ const Room = (props) => {
   const [isCurrPlayer, setIsCurrPlayer] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const auth = useContext(AuthenticationContext);
+  const [xTrophy, setXTrophy] = useState(0);
+  const [oTrophy, setOTrophy] = useState(0);
 
   // game state
   const [current, setCurrent] = useState({
@@ -69,8 +73,10 @@ const Room = (props) => {
 
     apiLoadRoomWithPlayerInfoById(roomId)
       .then((res) => {
-        console.log(res.data);
+        console.log("fulinfo", res.data);
         setRoomInfo(res.data);
+        setXTrophy(res.data.xPlayerTrophy);
+        setOTrophy(res.data.oPlayerTrophy);
 
         if (auth.authenState.userInfo._id === res.data.xCurrentPlayer) {
           setIsCurrPlayer("X");
@@ -88,7 +94,7 @@ const Room = (props) => {
               for (let item of resGame.data.history) {
                 history.squares[item.location] = item.player;
               }
-              history.location = resGame.data.history
+              history.location = resGame.data.history.length !== 0
                 ? resGame.data.history[resGame.data.history.length - 1].location
                 : null;
               history.xTurn = resGame.data.xTurn;
@@ -101,11 +107,13 @@ const Room = (props) => {
               setCurrent(history);
               setGame(resGame.data);
               setMessages(resGame.data.history[resGame.data.history.length - 1].messages);
+              //console.log(resGame.data)
+              setIsLoading(false);
             })
             .catch((err) => console.log(err));
+        } else {
+          setIsLoading(false);
         }
-
-        setIsLoading(false);
       })
       .catch((err) => console.log(err));
   }, [roomId]);
@@ -118,9 +126,11 @@ const Room = (props) => {
             ...roomInfo,
             xCurrentPlayer: data.user._id,
             xPlayerUsername: data.user.username,
+            xPlayerTrophy: data.user.trophy,
             xPlayerReady: false,
           };
           setRoomInfo(newRoomInfo);
+          setXTrophy(newRoomInfo.xPlayerTrophy);
           if (auth.authenState.userInfo._id === data.user._id) {
             setIsCurrPlayer("X");
           }
@@ -129,15 +139,17 @@ const Room = (props) => {
             ...roomInfo,
             oCurrentPlayer: data.user._id,
             oPlayerUsername: data.user.username,
+            oPlayerTrophy: data.user.trophy,
             oPlayerReady: false,
           };
           setRoomInfo(newRoomInfo);
+          setOTrophy(newRoomInfo.oPlayerTrophy);
           if (auth.authenState.userInfo._id === data.user._id) {
             setIsCurrPlayer("O");
           }
         }
         console.log("data", data);
-        console.log("update curr p;ayer", roomInfo);
+        console.log("update curr player", roomInfo);
       });
     }
   }, [roomInfo?._id]);
@@ -164,25 +176,57 @@ const Room = (props) => {
       history.location = data.newHistory.location;
       history.xTurn = data.newHistory.xTurn;
 
-      checkWinner(history.squares, history.location, history.xTurn);
-
+      checkWinner(history.squares, history.location, history.xTurn, {
+        ...game,
+      });
     });
   }, [game]);
 
-  const checkWinner = (squares, location, xTurn) => {
+  useEffect(() => {
+    if (game) {
+      socket.on(SAVE_USER_SUCCESS, (data) => {
+        //console.log(data);
+        if (data.winner === `X`){
+          setXTrophy(data.updatedWinner);
+        setOTrophy(data.updatedLoser);
+        } else if (data.winner === `O`) {
+          setOTrophy(data.updatedWinner);
+          setXTrophy(data.updatedLoser);
+        }
+        
+      });
+    }
+  }, [game]);
+
+  const checkWinner = (squares, location, xTurn, game) => {
     const checkedResult = calculateWinner(squares, location);
-    console.log(checkedResult);
     const { winner, line, draw } = checkedResult;
+    console.log(game);
     if (winner) {
       setGameStt(`${winner} thắng`);
       setIsClickable(false);
       setWinningLine(line);
+      if (isCurrPlayer === winner) {
+        console.log("calling", isCurrPlayer, winner);
+        socket.emit(SAVE_RESULT, {
+          gameId: game._id,
+          winningLine: line,
+          winner: winner,
+          xPlayer: game.xPlayer,
+          oPlayer: game.oPlayer,
+          roomId: game.roomId
+        });
+      }
     } else {
       if (draw) {
         setGameStt(`Hoà`);
         setIsClickable(false);
+        socket.emit(SAVE_RESULT, {
+          gameId: game._id,
+          winner: "none",
+          roomId: game.roomId
+        });
       } else {
-        console.log("aaaaa");
         setCurrent({ squares: squares, location: location, xTurn: xTurn });
         setGameStt(`Lượt kế tiếp ${!xTurn ? "O" : "X"}`);
       }
@@ -204,6 +248,7 @@ const Room = (props) => {
       user: {
         _id: auth.authenState.userInfo._id,
         username: auth.authenState.userInfo.username,
+        // trophy: auth.authenState.userInfo.trophy
       },
       player: player,
       roomId: roomId,
@@ -213,16 +258,18 @@ const Room = (props) => {
 
   const handleOnClickReady = () => {
     if (isCurrPlayer) {
-        let sendData = {...roomInfo};
-        sendData.player = isCurrPlayer;
-        sendData.xPlayerReady = isCurrPlayer === "X" ? !roomInfo.xPlayerReady : roomInfo.xPlayerReady
-        sendData.oPlayerReady = isCurrPlayer === "O" ? !roomInfo.oPlayerReady : roomInfo.oPlayerReady
-        sendData.xCurrentPlayer = roomInfo.xCurrentPlayer
-        sendData.oCurrentPlayer = roomInfo.oCurrentPlayer
+      let sendData = { ...roomInfo };
+      sendData.player = isCurrPlayer;
+      sendData.xPlayerReady =
+        isCurrPlayer === "X" ? !roomInfo.xPlayerReady : roomInfo.xPlayerReady;
+      sendData.oPlayerReady =
+        isCurrPlayer === "O" ? !roomInfo.oPlayerReady : roomInfo.oPlayerReady;
+      sendData.xCurrentPlayer = roomInfo.xCurrentPlayer;
+      sendData.oCurrentPlayer = roomInfo.oCurrentPlayer;
 
-        socket.emit(UPDATE_READY_STATUS, sendData);
+      socket.emit(UPDATE_READY_STATUS, sendData);
     }
-};
+  };
 
   socket.on(START_GAME, (game) => {
     setRoomInfo({
@@ -239,6 +286,7 @@ const Room = (props) => {
     });
     setGameStt("Bắt đầu X");
     setGame(game);
+    console.log("start", game);
   });
 
   socket.on(GIVEN_IN_EVENT, (data) => {
@@ -379,7 +427,7 @@ const Room = (props) => {
               </Grid>
               <Grid item xs={3}>
                 <Box textAlign="center">
-                  {/* {goal.xPoints} : {goal.oPoints} */}
+                  {/* `${} trophies vs ${} trophies` */}
                 </Box>
               </Grid>
               <Grid item xs={3}>
@@ -391,6 +439,26 @@ const Room = (props) => {
               </Grid>
             </Grid>
           </Grid>
+          <Grid item xs={12}>
+            <Grid
+              container
+              justify="space-around"
+              style={{ textAlign: "center", marginBottom: 10 }}
+            >
+              <Grid item xs={3} display="flex" justify="center">
+                <Box textAlign="center">{xTrophy} trophies</Box>
+              </Grid>
+              <Grid item xs={3}>
+                <Box textAlign="center">
+                  {/* `${} trophies vs ${} trophies` */}
+                </Box>
+              </Grid>
+              <Grid item xs={3}>
+                <Box textAlign="center">{oTrophy} trophies</Box>
+              </Grid>
+            </Grid>
+          </Grid>
+
           <Grid container justify="space-around" className={classes.paper}>
             <Grid item xs={3}>
               <Box display="flex" flexDirection="column" alignItems="center">

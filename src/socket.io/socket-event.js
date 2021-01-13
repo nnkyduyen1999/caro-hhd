@@ -31,3 +31,7 @@ export const UPDATE_CURRENT_PLAYER = "updateCurrentPlayer";
 export const UPDATE_READY_STATUS = "updateReadyStatus";
 
 export const START_GAME = "startGame";
+
+export const SAVE_RESULT = "saveResult";
+
+export const SAVE_USER_SUCCESS = "saveUserSuccess";

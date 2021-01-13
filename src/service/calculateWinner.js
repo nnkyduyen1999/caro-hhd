@@ -1,10 +1,9 @@
-const SIZE = 15;
+const SIZE = 20;
 // let test = Array(25).fill(null);
 // test[4] = test[8] = test[12] = test[16] = test[20] = 'X';
 
 export const calculateWinner = (squares, i) => {
     if(squares[i] === null) return null;
-
     const length = SIZE*SIZE;
     let j, count, line, block;
 
