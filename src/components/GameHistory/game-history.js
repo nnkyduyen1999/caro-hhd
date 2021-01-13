@@ -1,4 +1,11 @@
-import { Container, Grid, Box, Avatar, ListItem, ListItemText } from "@material-ui/core";
+import {
+  Container,
+  Grid,
+  Box,
+  Avatar,
+  ListItem,
+  ListItemText,
+} from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { apiGetGameHistoryDetail } from "../../service/game-service";
@@ -11,7 +18,7 @@ const GameHistory = (props) => {
   const { gameId } = useParams();
   const [game, setGame] = useState(null);
   const [current, setCurrent] = useState(null);
-  const [winningLine, setWinningLine] = useState(null)
+  const [winningLine, setWinningLine] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const loadGameInfo = () => {
@@ -31,13 +38,13 @@ const GameHistory = (props) => {
   const handleClickBoard = (i) => {};
 
   const onClickStep = (i) => {
-    setCurrent({...game.history[i]})
+    setCurrent({ ...game.history[i] });
     if (i === game.history.length - 1) {
-        setWinningLine(game.winningLine)
+      setWinningLine(game.winningLine);
     } else {
-        setWinningLine(null)
+      setWinningLine(null);
     }
-  }
+  };
 
   const renderSteps = (stepData) => {
     return stepData.map((item, index) => (
@@ -47,7 +54,7 @@ const GameHistory = (props) => {
         button
         onClick={() => onClickStep(index)}
       >
-        <ListItemText primary={`Step ${index + 1}`} />
+        <ListItemText primary={`Step ${index}`} />
       </ListItem>
     ));
   };
@@ -69,18 +76,19 @@ const GameHistory = (props) => {
                       </Grid>
                   </Grid>
               </Grid> */}
-              <Grid item xs={1}>
-                  {renderSteps(game.history)}
-              </Grid>
 
-        <Grid item xs={6}>
+        <Grid item xs={9}>
           <Grid container className={classes.paper}>
             <Grid item xs={12}>
               {game.winner === "Draw" ? game.winner : `${game.winner} win`}
             </Grid>
           </Grid>
+
           <Grid container className={classes.paper}>
-            <Grid item xs={12}>
+            <Grid item xs={1}>
+              {renderSteps(game.history)}
+            </Grid>
+            <Grid item xs={11}>
               <Box display="flex" justifyContent="center">
                 <Board
                   squares={current.squares}
@@ -93,7 +101,7 @@ const GameHistory = (props) => {
           </Grid>
         </Grid>
 
-        <Grid item xs={5} spacing={3}>
+        <Grid item xs={3} spacing={3}>
           <Grid item xs={12}>
             <Grid container justify="space-around" className={classes.paper}>
               <Grid item xs={3} display="flex" justify="center">
@@ -127,9 +135,7 @@ const GameHistory = (props) => {
                   className={classes.large}
                 />
               </Box>
-              <Box className={classes.userName}>
-                {game.xPlayerUsername}
-              </Box>
+              <Box className={classes.userName}>{game.xPlayerUsername}</Box>
             </Grid>
             <Grid item xs={3}>
               <Box className={classes.paper}></Box>
@@ -142,13 +148,11 @@ const GameHistory = (props) => {
                   className={classes.large}
                 />
               </Box>
-              <Box className={classes.userName}>
-                {game.oPlayerUsername}
-              </Box>
+              <Box className={classes.userName}>{game.oPlayerUsername}</Box>
             </Grid>
           </Grid>
           {/* <Grid container justify="center">
-                      <Grid item xs={8}>
+                      <Grid item xs={10}>
                           {game && <Chat id={roomId} messages={messages} sendMessage={sendMessage}/>}
                       </Grid>
                   </Grid> */}
