@@ -4,6 +4,7 @@ import { DataGrid } from "@material-ui/data-grid";
 import { apiGetFinishedGamesById } from "../../service/user-service";
 import { AuthenticationContext } from "../../providers/authenticationProvider";
 import moment from 'moment'
+import { useHistory } from "react-router-dom";
 
 const columns = [
   { field: "id", headerName: "ID", width: 90 },
@@ -25,6 +26,7 @@ const columns = [
 const History = () => {
   const [listGame, setListGame] = React.useState([]);
   const { authenState } = React.useContext(AuthenticationContext);
+  const history = useHistory()
 
   React.useEffect(() => {
     apiGetFinishedGamesById(authenState.userInfo._id)
@@ -52,7 +54,7 @@ const History = () => {
   return (
     <div style={{ height: 400, width: "100%" }}>
         <Header homeActive={true} />
-      <DataGrid rows={listGame} columns={columns} pageSize={5} />
+      <DataGrid rows={listGame} columns={columns} pageSize={5} onCellClick={(cell) => history.push(`/history/${cell.row.id}`)}/>
     </div>
   );
 };

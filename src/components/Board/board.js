@@ -12,7 +12,7 @@ const Board = (props) => {
         key={`square-${i}`}
         value={props.squares[i]}
         onClick={() => props.onClick(i)}
-        isWinning={props.winningLine.includes(i)}
+        isWinning={props.winningLine ? props.winningLine.includes(i) : null}
       />
     );
   };
