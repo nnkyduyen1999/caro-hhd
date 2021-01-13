@@ -7,7 +7,7 @@ import moment from 'moment'
 import { useHistory } from "react-router-dom";
 
 const columns = [
-  { field: "id", headerName: "ID", width: 90 },
+  { field: "ord", headerName: "Ordinary", width: 90 },
   { field: "xPlayer", headerName: "Player X", width: 150 },
   { field: "oPlayer", headerName: "Player O", width: 150 },
   {
@@ -19,8 +19,7 @@ const columns = [
   {
     field: "time",
     headerName: "Time",
-    width: 150,
-    align: "center",
+    width: 200,
   },
 ];
 const History = () => {
@@ -36,6 +35,7 @@ const History = () => {
           setListGame(
             res.data.map((game, index) => ({
               id: game.id,
+              ord: index + 1,
               xPlayer: game.xUsername,
               oPlayer: game.oUsername,
               winner: game.winner,
