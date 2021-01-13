@@ -1,21 +1,9 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  CircularProgress,
-  Container,
-  Grid,
-  IconButton,
-} from "@material-ui/core";
-import { useStyles } from "./useStyle";
-import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { AuthenticationContext } from "../../providers/authenticationProvider";
-import {
-  apiLoadLatestGameInRoomById,
-  apiLoadRoomWithPlayerInfoById,
-} from "../../service/room-service";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import {Avatar, Box, Button, CircularProgress, Container, Grid,} from "@material-ui/core";
+import {useStyles} from "./useStyle";
+import React, {useContext, useEffect, useState} from "react";
+import {useParams} from "react-router-dom";
+import {AuthenticationContext} from "../../providers/authenticationProvider";
+import {apiLoadLatestGameInRoomById, apiLoadRoomWithPlayerInfoById,} from "../../service/room-service";
 import ExitRoom from "../ExitRoom/exitRoom";
 import BecomePlayerBtn from "./BecomePlayerBtn/become-player-btn";
 import socket from "../../socket.io/socket.io";
@@ -26,15 +14,15 @@ import {
   JOIN_ROOM,
   NEW_CHAT_MESSAGE_EVENT,
   REQUEST_MOVE,
+  SAVE_RESULT,
+  SAVE_USER_SUCCESS,
   START_GAME,
   UPDATE_CURRENT_PLAYER,
   UPDATE_READY_STATUS,
-  SAVE_RESULT,
-  SAVE_USER_SUCCESS,
 } from "../../socket.io/socket-event";
 import Board from "../Board/board";
-import { BOARD_SIZE } from "../../global/constant";
-import { calculateWinner } from "../../service/calculateWinner";
+import {BOARD_SIZE} from "../../global/constant";
+import {calculateWinner} from "../../service/calculateWinner";
 import Chat from "../Chat/chat";
 
 const Room = (props) => {
@@ -54,13 +42,11 @@ const Room = (props) => {
     location: null,
     xTurn: true,
   });
-  // const [xTurn, setXTurn] = useState(null);
   const [gameStt, setGameStt] = useState(`Bắt đầu X`);
   const [isClickable, setIsClickable] = useState(true);
   const [winningLine, setWinningLine] = useState([]);
 
   //chat state
-  // const {messages, sendMessage} = useChat(roomId);
   const [messages, setMessages] = useState([]); // Sent and received messages
 
   // load room info
@@ -74,7 +60,7 @@ const Room = (props) => {
 
     apiLoadRoomWithPlayerInfoById(roomId)
       .then((res) => {
-        console.log("fulinfo", res.data);
+        // console.log("fulinfo", res.data);
         setRoomInfo(res.data);
         setXTrophy(res.data.xPlayerTrophy);
         setOTrophy(res.data.oPlayerTrophy);
@@ -158,8 +144,8 @@ const Room = (props) => {
             setIsCurrPlayer("O");
           }
         }
-        console.log("data", data);
-        console.log("update curr player", roomInfo);
+        // console.log("data", data);
+        // console.log("update curr player", roomInfo);
       });
     }
   }, [roomInfo?._id]);
@@ -167,7 +153,7 @@ const Room = (props) => {
   useEffect(() => {
     if (roomInfo) {
       socket.on(UPDATE_READY_STATUS, (data) => {
-        // console.log(data);
+        // console.log('ready', data);
         const newRoomInfo = { ...data };
         delete newRoomInfo.player;
         setRoomInfo(newRoomInfo);
@@ -204,25 +190,27 @@ const Room = (props) => {
   }, [game]);
 
   useEffect(() => {
-    socket.on(START_GAME, (game) => {
-      setRoomInfo({
-        ...roomInfo,
-        oPlayerReady: false,
-        xPlayerReady: false,
-        isPlaying: true,
-      });
+    // if(roomInfo) {
+      socket.on(START_GAME, (data) => {
+        // console.log('start game data', data)
+        const newRoomInfo = { ...data.roomInfo };
+        delete newRoomInfo.player;
+        setRoomInfo(newRoomInfo);
 
-      setCurrent({
-        squares: Array(BOARD_SIZE * BOARD_SIZE).fill(null),
-        location: null,
-        xTurn: true,
+        setCurrent({
+          squares: Array(BOARD_SIZE * BOARD_SIZE).fill(null),
+          location: null,
+          xTurn: true,
+        });
+        setGameStt("Bắt đầu X");
+        setGame(data.game);
+        setIsClickable(true);
+        setWinningLine([]);
+        // console.log("start-game: roomInfo", roomInfo);
+        // console.log("start-game: game", game);
       });
-      setGameStt("Bắt đầu X");
-      setGame(game);
-      setIsClickable(true);
-      console.log("start", game);
-    });
-  }, [roomId]);
+    // }
+  }, []);
 
   useEffect(() => {
     socket.on(GIVEN_IN_EVENT, (data) => {
@@ -235,14 +223,14 @@ const Room = (props) => {
   const checkWinner = (squares, location, xTurn, game) => {
     const checkedResult = calculateWinner(squares, location);
     const { winner, line, draw } = checkedResult;
-    console.log(game);
+    // console.log(game);
     if (winner) {
       setGameStt(`${winner} thắng`);
       setIsClickable(false);
       setWinningLine(line);
       setRoomInfo({ ...roomInfo, isPlaying: false });
       if (isCurrPlayer === winner) {
-        console.log("calling", isCurrPlayer, winner);
+        // console.log("calling", isCurrPlayer, winner);
         socket.emit(SAVE_RESULT, {
           gameId: game._id,
           winningLine: line,
@@ -284,7 +272,6 @@ const Room = (props) => {
       user: {
         _id: auth.authenState.userInfo._id,
         username: auth.authenState.userInfo.username,
-        // trophy: auth.authenState.userInfo.trophy
       },
       player: player,
       roomId: roomId,
@@ -302,7 +289,6 @@ const Room = (props) => {
         isCurrPlayer === "O" ? !roomInfo.oPlayerReady : roomInfo.oPlayerReady;
       sendData.xCurrentPlayer = roomInfo.xCurrentPlayer;
       sendData.oCurrentPlayer = roomInfo.oCurrentPlayer;
-
       socket.emit(UPDATE_READY_STATUS, sendData);
     }
   };
@@ -361,14 +347,6 @@ const Room = (props) => {
     });
   };
 
-  // const resetGame = () => {
-  //     setRoomInfo({
-  //         ...roomInfo,
-  //         isPlaying: false,
-  //     });
-  //     setIsClickable(true);
-  // }
-
   return isLoading ? (
     <CircularProgress />
   ) : (
@@ -411,17 +389,17 @@ const Room = (props) => {
             </Grid>
           ) : null}
 
-          <Grid container className={classes.paper} justify="center">
+          {roomInfo.isPlaying && <Grid container className={classes.paper} justify="center">
             <Grid item xs={6}>
               <Button
-                variant="contained"
-                color="secondary"
-                onClick={handleGiveIn}
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleGiveIn}
               >
                 Give in
               </Button>
             </Grid>
-          </Grid>
+          </Grid>}
         </Grid>
 
         <Grid item xs={4} spacing={3}>
