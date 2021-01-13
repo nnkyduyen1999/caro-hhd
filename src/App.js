@@ -15,6 +15,7 @@ import ForgetPassword from "./components/ForgetPassword/forgetPassword";
 import ResetPassword from "./components/ForgetPassword/resetPassword";
 import Room from "./components/Room/room";
 import Profile from "./components/Profile/index";
+import GameHistory from "./components/GameHistory/game-history";
 
 function App() {
   const darkTheme = createMuiTheme({
@@ -40,7 +41,10 @@ function App() {
             <PrivateRoute path="/home" component={Home} />
             <PrivateRoute path="/room/:roomId" component={Room} />
             <PrivateRoute path="/profile/:id" component={Profile} />
+            <PrivateRoute path="/history/:gameId" component={GameHistory} exact/>
             <PrivateRoute path="/history" component={History} />
+            
+
             {/*<PrivateRoute path="/chat" component={Chat} />*/}
           </Switch>
         </BrowserRouter>
