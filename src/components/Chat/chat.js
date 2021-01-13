@@ -1,5 +1,4 @@
-import React, {useEffect} from "react";
-import useChat from "./useChat";
+import React, {useContext, useEffect} from "react";
 import {Grid} from "@material-ui/core";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import ChatItem from "./ChatItem/chat-item";
@@ -9,10 +8,11 @@ import Paper from "@material-ui/core/Paper";
 import IconButton from "@material-ui/core/IconButton";
 import InputBase from "@material-ui/core/InputBase";
 import List from "@material-ui/core/List";
+import {AuthenticationContext} from "../../providers/authenticationProvider";
 
-const Chat = ({id, disableSend}) => {
+const Chat = ({disableSend, messages, sendMessage}) => {
     const classes = useStyles();
-    const {messages, sendMessage} = useChat(id); // Creates a websocket and manages messaging
+    const {authenState} = useContext(AuthenticationContext);
     const [newMessage, setNewMessage] = React.useState(""); // Message to be sent
 
     useEffect(() => {
@@ -43,10 +43,11 @@ const Chat = ({id, disableSend}) => {
             <CssBaseline/>
             <Grid item md={12}>
                 <List className={classes.conversationContainer} id={'bottom'}>
-                    {messages.map((message, i) => (
-                        <ChatItem key={i} message={message.body} isOwn={message.ownedByCurrentUser}
+                    {messages.map((message, i) => {
+                        const isOwn = message.senderId === authenState.userInfo._id;
+                        return <ChatItem key={i} message={message.body} isOwn={isOwn}
                                   senderName={message.senderName}/>
-                    ))}
+                    })}
                 </List>
             </Grid>
             {!disableSend &&

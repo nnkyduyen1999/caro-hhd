@@ -4,7 +4,6 @@ import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";
 import Signup from "./components/Signup/signup";
 import Login from "./components/Login/login";
 import {createMuiTheme, CssBaseline, ThemeProvider} from "@material-ui/core";
-import Game from "./components/Game/game";
 import PublicRoute from "./router/public-router";
 import PrivateRoute from "./router/private-router";
 import {AuthenticationProvider} from "./providers/authenticationProvider";
@@ -39,7 +38,6 @@ function App() {
             <PublicRoute component={ResetPassword} path="/user/reset-password/:token" exact/>
             <PrivateRoute path="/top-players" component={TopPlayers} />
             <PrivateRoute path="/home" component={Home} />
-            <PrivateRoute path="/game/:roomId" component={Game} />
             <PrivateRoute path="/room/:roomId" component={Room} />
             <PrivateRoute path="/profile" component={Profile} />
             <PrivateRoute path="/history" component={History} />

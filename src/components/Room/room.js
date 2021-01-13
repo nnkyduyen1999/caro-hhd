@@ -22,7 +22,7 @@ import {
   ACCEPT_MOVE,
   BECOME_PLAYER,
   GIVEN_IN_EVENT,
-  JOIN_ROOM,
+  JOIN_ROOM, NEW_CHAT_MESSAGE_EVENT,
   REQUEST_MOVE,
   START_GAME,
   UPDATE_CURRENT_PLAYER,
@@ -54,9 +54,18 @@ const Room = (props) => {
   const [winningLine, setWinningLine] = useState([]);
   const [newMove, setNewMove] = useState(false);
 
+  //chat state
+  // const {messages, sendMessage} = useChat(roomId);
+  const [messages, setMessages] = useState([]); // Sent and received messages
+
   // load room info
   useEffect(() => {
     socket.emit(JOIN_ROOM, roomId);
+    socket.on(NEW_CHAT_MESSAGE_EVENT, (message) => {
+      let incomingMessage = {...message}
+      delete incomingMessage.roomId;
+      setMessages((messages) => [...messages, incomingMessage]);
+    });
 
     apiLoadRoomWithPlayerInfoById(roomId)
       .then((res) => {
@@ -91,6 +100,7 @@ const Room = (props) => {
               );
               setCurrent(history);
               setGame(resGame.data);
+              setMessages(resGame.data.history[resGame.data.history.length - 1].messages);
             })
             .catch((err) => console.log(err));
         }
@@ -278,7 +288,17 @@ const Room = (props) => {
         player: isCurrPlayer,
         location: i,
         xTurn: !current.xTurn,
+        messages: messages
       },
+    });
+  };
+
+  const sendMessage = (messageBody) => {
+    socket.emit(NEW_CHAT_MESSAGE_EVENT, {
+      body: messageBody,
+      senderId: auth.authenState.userInfo._id,
+      senderName: auth.authenState.userInfo.username,
+      roomId
     });
   };
 
@@ -426,7 +446,7 @@ const Room = (props) => {
           </Grid>
           <Grid container justify="center">
             <Grid item xs={8}>
-              {game && <Chat id={roomId} />}
+              {game && <Chat id={roomId} messages={messages} sendMessage={sendMessage}/>}
             </Grid>
           </Grid>
         </Grid>
