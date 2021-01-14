@@ -12,7 +12,6 @@ const Matching = (props) => {
   const handleClick = () => {
     const sendData = {
       _id: authenticationContext.authenState.userInfo._id,
-      trophy: authenticationContext.authenState.userInfo.trophy,
       username: authenticationContext.authenState.userInfo.username
     }
     socket.emit(MATCHING, sendData);
