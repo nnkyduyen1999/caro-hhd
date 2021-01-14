@@ -13,6 +13,7 @@ import Board from "../Board/board";
 import Loading from "../Loading/loading";
 import {useStyles} from "./useStyles";
 import Chat from "../Chat/chat";
+import Header from "../Header/header";
 
 const GameHistory = (props) => {
     const classes = useStyles();
@@ -64,6 +65,8 @@ const GameHistory = (props) => {
     return isLoading ? (
         <Loading/>
     ) : (
+      <>
+      <Header historyActive={true} />
         <Container className={classes.root}>
             <Grid container spacing={3}>
                 <Grid item xs={9}>
@@ -147,6 +150,7 @@ const GameHistory = (props) => {
                 </Grid>
             </Grid>
         </Container>
+        </>
     );
 };
 
