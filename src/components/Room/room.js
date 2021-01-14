@@ -477,6 +477,7 @@ const Room = (props) => {
                       ? "https://images-na.ssl-images-amazon.com/images/I/71FcdrSeKlL._AC_SL1001_.jpg"
                       : process.env.PUBLIC_URL + "/img/user.svg"
                   }
+                  style={isCurrPlayer === 'X' ? {border: '2px solid yellow'} : null}
                   className={classes.large}
                 />
                 <Box className={classes.userName}>
@@ -505,6 +506,7 @@ const Room = (props) => {
                       : process.env.PUBLIC_URL + "/img/user.svg"
                   }
                   className={classes.large}
+                  style={isCurrPlayer === 'O' ? {border: '2px solid yellow'} : null}
                 />
                 <Box className={classes.userName}>
                   {roomInfo.oCurrentPlayer ? (
