@@ -35,3 +35,5 @@ export const START_GAME = "startGame";
 export const SAVE_RESULT = "saveResult";
 
 export const SAVE_USER_SUCCESS = "saveUserSuccess";
+
+export const EXIT_ROOM = "exitRoom";

@@ -1,7 +1,7 @@
 import {Avatar, Box, Button, CircularProgress, Container, Grid,} from "@material-ui/core";
 import {useStyles} from "./useStyle";
 import React, {useContext, useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 import {AuthenticationContext} from "../../providers/authenticationProvider";
 import {apiLoadLatestGameInRoomById, apiLoadRoomWithPlayerInfoById,} from "../../service/room-service";
 import ExitRoom from "../ExitRoom/exitRoom";
@@ -10,6 +10,7 @@ import socket from "../../socket.io/socket.io";
 import {
   ACCEPT_MOVE,
   BECOME_PLAYER,
+  EXIT_ROOM,
   GIVEN_IN_EVENT,
   JOIN_ROOM,
   NEW_CHAT_MESSAGE_EVENT,
@@ -28,6 +29,7 @@ import Chat from "../Chat/chat";
 const Room = (props) => {
   const classes = useStyles();
   const { roomId } = useParams();
+  const history = useHistory()
   const [roomInfo, setRoomInfo] = useState(null);
   const [game, setGame] = useState(null);
   const [isCurrPlayer, setIsCurrPlayer] = useState(null);
@@ -117,6 +119,7 @@ const Room = (props) => {
   useEffect(() => {
     if (roomInfo) {
       socket.on(UPDATE_CURRENT_PLAYER, (data) => {
+        console.log('aa', data)
         if (data.player === "X") {
           const newRoomInfo = {
             ...roomInfo,
@@ -131,6 +134,7 @@ const Room = (props) => {
             setIsCurrPlayer("X");
           }
         } else if (data.player === "O") {
+          
           const newRoomInfo = {
             ...roomInfo,
             oCurrentPlayer: data.user._id,
@@ -138,6 +142,7 @@ const Room = (props) => {
             oPlayerTrophy: data.user.trophy,
             oPlayerReady: false,
           };
+          console.log('new;', newRoomInfo)
           setRoomInfo(newRoomInfo);
           setOTrophy(newRoomInfo.oPlayerTrophy);
           if (auth.authenState.userInfo._id === data.user._id) {
@@ -279,6 +284,22 @@ const Room = (props) => {
     socket.emit(BECOME_PLAYER, sendData);
   };
 
+  const handleOnExitRoom = () => {
+    
+    const sendData = {
+      user: {
+        _id: auth.authenState.userInfo._id,
+        username: auth.authenState.userInfo.username,
+      },
+      player: isCurrPlayer,
+      roomId: roomId,
+      isPlaying: roomInfo.isPlaying,
+      gameId: game?._id
+    };
+    socket.emit(EXIT_ROOM, sendData);
+    history.push('/home')
+  };
+
   const handleOnClickReady = () => {
     if (isCurrPlayer) {
       let sendData = { ...roomInfo };
@@ -355,7 +376,7 @@ const Room = (props) => {
         <Grid item xs={8}>
           <Grid container className={classes.paper}>
             <Grid item xs={1}>
-              <ExitRoom/>
+              <ExitRoom onClick={handleOnExitRoom} disabled={roomInfo.isPlaying && isCurrPlayer}/>
             </Grid>
             <Grid item xs={10}>
               {game ? gameStt : null}
