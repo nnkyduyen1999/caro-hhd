@@ -119,38 +119,21 @@ const Room = (props) => {
   useEffect(() => {
     if (roomInfo) {
       socket.on(UPDATE_CURRENT_PLAYER, (data) => {
-        console.log('aa', data)
+      
         if (data.player === "X") {
-          const newRoomInfo = {
-            ...roomInfo,
-            xCurrentPlayer: data.user._id,
-            xPlayerUsername: data.user.username,
-            xPlayerTrophy: data.user.trophy,
-            xPlayerReady: false,
-          };
-          setRoomInfo(newRoomInfo);
-          setXTrophy(newRoomInfo.xPlayerTrophy);
+          setRoomInfo(data.roomInfo);
+          setXTrophy(data.roomInfo.xPlayerTrophy);
           if (auth.authenState.userInfo._id === data.user._id) {
             setIsCurrPlayer("X");
           }
         } else if (data.player === "O") {
           
-          const newRoomInfo = {
-            ...roomInfo,
-            oCurrentPlayer: data.user._id,
-            oPlayerUsername: data.user.username,
-            oPlayerTrophy: data.user.trophy,
-            oPlayerReady: false,
-          };
-          console.log('new;', newRoomInfo)
-          setRoomInfo(newRoomInfo);
-          setOTrophy(newRoomInfo.oPlayerTrophy);
+          setRoomInfo(data.roomInfo);
+          setOTrophy(data.roomInfo.oPlayerTrophy);
           if (auth.authenState.userInfo._id === data.user._id) {
             setIsCurrPlayer("O");
           }
         }
-        // console.log("data", data);
-        // console.log("update curr player", roomInfo);
       });
     }
   }, [roomInfo?._id]);
@@ -210,7 +193,7 @@ const Room = (props) => {
         setGameStt("Bắt đầu X");
         setGame(data.game);
         setIsClickable(true);
-        setWinningLine([]);
+        setWinningLine(data.game.winningLine);
         // console.log("start-game: roomInfo", roomInfo);
         // console.log("start-game: game", game);
       });
@@ -280,6 +263,7 @@ const Room = (props) => {
       },
       player: player,
       roomId: roomId,
+      roomInfo: roomInfo
     };
     socket.emit(BECOME_PLAYER, sendData);
   };
@@ -293,8 +277,8 @@ const Room = (props) => {
       },
       player: isCurrPlayer,
       roomId: roomId,
-      isPlaying: roomInfo.isPlaying,
-      gameId: game?._id
+      roomInfo: roomInfo
+      
     };
     socket.emit(EXIT_ROOM, sendData);
     history.push('/home')
