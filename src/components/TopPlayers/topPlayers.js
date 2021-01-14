@@ -64,7 +64,7 @@ export default function TopPlayers() {
               trophy: user.trophy,
               total: user.total,
               places: index + 1, 
-              goals: user.winCount / user.total
+              goals: user.total === 0 ? `Not play` : user.winCount/user.total
           })))
         } else {
           setMsg("Error has occurred.");
